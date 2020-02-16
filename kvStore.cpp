@@ -276,10 +276,16 @@ class kvstore{
 					return true;
 				}
 				else if(strcmp(p->key, t->key)<0)
+                {
+                    p->rsize++;
 					p = p->right;
-				else
+                }
+                else
+                {
+                    p->lsize++;
 					p = p->left;
-			}
+			    }
+            }
 			t->parent = q;
 			if(strcmp(q->key->data, t->key->data)<0)
 				q->right = t;
