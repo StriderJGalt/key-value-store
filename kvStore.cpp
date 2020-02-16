@@ -3,7 +3,7 @@ using namespace std;
 
 struct Slice{
     uint8_t size;
-    char* data;
+    string data;
 };
 class node
 {
@@ -50,11 +50,11 @@ class kvstore{
         int found=0;
         while(p!=NULL&&found==0)
         {
-            if(p->key->data.compare(x)==0)
+            if(p->key->data.compare(key)==0)
                 found=1;
             if(found==0)
             {
-                if(p->key->data.compare(x)<0)
+                if(p->key->data.compare(key)<0)
                     p=p->right;
                 else
                     p=p->left;
@@ -62,31 +62,10 @@ class kvstore{
         }
         if(found==0)
         {
-            cout<<"\nElement Not Found.";
-            return ;
+            return false;
         }
         else
         {
-            cout<<"\nDeleted Element: "<<p->key;
-            cout<<"\nColour: ";
-            if(p->color=='b')
-                cout<<"Black\n";
-            else
-                cout<<"Red\n";
-
-            if(p->parent!=NULL)
-                cout<<"\nParent: "<<p->parent->key;
-            else
-                cout<<"\nThere is no parent of the node.  ";
-            if(p->right!=NULL)
-                cout<<"\nRight Child: "<<p->right->key;
-            else
-                cout<<"\nThere is no right child of the node.  ";
-            if(p->left!=NULL)
-                cout<<"\nLeft Child: "<<p->left->key;
-            else
-                cout<<"\nThere is no left child of the node.  ";
-            cout<<"\nNode Deleted.";
             if(p->left==NULL||p->right==NULL)
                 y=p;
             else
@@ -114,10 +93,10 @@ class kvstore{
             if(y!=p)
             {
                 p->color=y->color;
-                p->key=y->key;
+                p->key->data=y->key->data;
             }
-            if(y->color=='b')
-                delfix(q);
+            // if(y->color=='b')
+                // delfix(q);
         }
         return false;
     }
