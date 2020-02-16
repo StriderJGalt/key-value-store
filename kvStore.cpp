@@ -48,16 +48,37 @@ class kvstore{
          }
          return y;
     }
-    pair<string,string> get(string key){
-        //Your Code Here
-        pair<string,string> temp = make_pair("key","value");
-        return temp;
+
+    void rightrotate(node *p)
+    {
+         if(p->left==NULL)
+              return ;
+         else
+         {
+             node *y=p->left;
+             if(y->right!=NULL)
+             {
+                      p->left=y->right;
+                      y->right->parent=p;
+             }
+             else
+                     p->left=NULL;
+             if(p->parent!=NULL)
+                     y->parent=p->parent;
+             if(p->parent==NULL)
+                   root=y;
+             else
+             {
+                 if(p==p->parent->left)
+                       p->parent->left=y;
+                 else
+                       p->parent->right=y;
+             }
+             y->right=p;
+             p->parent=y;
+         }
     }
 
-    bool put(string key, string value){
-        //Your Code Here
-        return false;
-    }
 
     void delfix(node *p)
     {
@@ -188,6 +209,17 @@ class kvstore{
             // if(y->color=='b')
                 // delfix(q);
         }
+        return false;
+    }
+
+    pair<string,string> get(string key){
+        //Your Code Here
+        pair<string,string> temp = make_pair("key","value");
+        return temp;
+    }
+
+    bool put(string key, string value){
+        //Your Code Here
         return false;
     }
 
