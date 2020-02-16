@@ -17,7 +17,10 @@ struct node
        char color;
        node *left;
        node *right;
+       int lsize;
+       int rsize;
 };
+
 class kvstore{
 public:
 	pair<string,string> get(string key){
