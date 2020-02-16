@@ -22,6 +22,8 @@ struct node
 };
 
 class kvstore{
+      node *root;
+      node *q;
 public:
 	pair<string,string> get(string key){
 		//Your Code Here
