@@ -18,10 +18,12 @@ class node
         int rsize;
     public:
         node(){
+            key = new Slice;
+            value = new Slice;
             key->size = 63;
-            key->data = (char *)malloc(sizeof(string)*(key->size));
+            /* key->data = (char *)malloc(sizeof(char)*(key->size)); */
             value->size = 255;
-            value->data = (char *)malloc(sizeof(string)*(value->size));
+            /* value->data = (char *)malloc(sizeof(char)*(value->size)); */
             lsize = 0;
             rsize = 0;
         }
@@ -116,13 +118,13 @@ class kvstore{
          }
     }
 
-	bool insertfix(node *t)
+	void insertfix(node *t)
 	{
 		node *u;
 		if(root == t)
 		{
 			t->color = 'b';
-			return true;
+			return ;
 		}
 		while(t->parent && t->parent->color == 'r')
 		{
@@ -176,7 +178,7 @@ class kvstore{
 				}
 			}
 			root->color = 'b';
-			return true;
+			return ;
 		}
 	}
 
@@ -300,7 +302,8 @@ class kvstore{
 			else
 				q->left = t;
 		}
-		return insertfix(t);
+		insertfix(t);
+        return false;
 	}
 
     bool del(string key){
@@ -328,7 +331,7 @@ class kvstore{
         else
         {
           node *par=p;
-          while(par->parent!=NULL)
+          while(par!=root)
           {
             if(par->parent->left == par)
             par->parent->lsize--;
@@ -393,12 +396,6 @@ class kvstore{
         return false;
         return true;
     }
-
-    bool put(string key, string value){
-        //Your Code Here
-        return false;
-    }
-
 
     pair<string,string> get(int N){
         // Your Code Here
