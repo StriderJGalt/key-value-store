@@ -38,9 +38,12 @@ class kvstore{
          else
          {
                node *y=p->right;
+               p->rsize-=(y->lsize + y->rsize);
                if(y->left!=NULL)
                {
                       p->right=y->left;
+                      p->rsize+=p->right->lsize + p->right->rsize;
+                      y->lsize-=p->right->lsize + p->right->rsize;
                       y->left->parent=p;
                }
                else
@@ -57,6 +60,7 @@ class kvstore{
                            p->parent->right=y;
                }
                y->left=p;
+               y->lsize+=p->lsize + p->rsize;
                p->parent=y;
          }
     }
@@ -85,9 +89,12 @@ class kvstore{
          else
          {
              node *y=p->left;
+             p->lsize-=(p->left->lsize+p->left->rsize);
              if(y->right!=NULL)
              {
                       p->left=y->right;
+                      p->lsize+=(p->left->lsize+p->left->rsize);
+                      y->rsize-=(p->left->lsize+p->left->rsize);
                       y->right->parent=p;
              }
              else
@@ -104,6 +111,7 @@ class kvstore{
                        p->parent->right=y;
              }
              y->right=p;
+             y->rsize+=(p->lsize+p->rsize);
              p->parent=y;
          }
     }
