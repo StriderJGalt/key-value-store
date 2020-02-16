@@ -108,6 +108,69 @@ class kvstore{
          }
     }
 
+	bool insertfix(node *t)
+	{
+		node *u;
+		if(root == t)
+		{
+			t->color = 'b';
+			return true;
+		}
+		while(t->parent && t->parent->color == 'r')
+		{
+			node *g = t->parent->parent;
+			if(g->left == t->parent)
+			{
+				if(g->right)
+				{
+					u = g->right;
+					if(u->color == 'r')
+					{
+						t->parent->color = 'b';
+						u->color = 'b';
+						g->color='r';
+						t=g;
+					}
+				}
+				else{
+					if(t->parent->right == t)
+					{
+						t = t->parent;
+						leftrotate(t);
+					}
+					t->parent->color = 'b';
+					g->color = 'r';
+					rightrotate(g);
+				}
+			}
+			else{
+				if(g->left)
+				{
+					u=g->left;
+					if(u->color == 'r')
+					{
+						t->parent->color = 'b';
+						u->color='b';
+						g->color='r';
+						t=g;
+					}
+				}
+				else
+				{
+					if(t->parent->left == t)
+					{
+						t = t->parent;
+						rightrotate(t);
+					}
+					t->parent->color = 'b';
+					g->color = 'r';
+					leftrotate(g);
+				}
+			}
+			root->color = 'b';
+			return true;
+		}
+	}
 
     void delfix(node *p)
     {
@@ -181,6 +244,50 @@ class kvstore{
         }
     }
 
+    bool put(string key, string value)
+	{
+		//Your Code Here
+		node *p, *q;
+		node *t = new node;
+
+		t->key->data = key;
+		t->key->size = strlen(key);
+		t->value = value;
+		t->key->value = strlen(value);
+		t->left = NULL;
+		t->right = NULL;
+		t->color = 'r';
+		
+
+		if(!root)
+		{
+			root = t;
+			t->parent = NULL;
+		}
+		else{
+			p = root;
+			q = NULL;
+			while(p)
+			{
+				q = p;
+				if(!strcmp(p->key->data, t->key->data))
+				{
+					p->value->data = t->value->data;
+					return true;
+				}
+				else if(strcmp(p->key, t->key)<0)
+					p = p->right;
+				else
+					p = p->left;
+			}
+			t->parent = q;
+			if(strcmp(q->key->data, t->key->data)<0)
+				q->right = t;
+			else
+				q->left = t;
+		}
+		return insertfix(t);
+	}
 
     bool del(string key){
         node *p;
