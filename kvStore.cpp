@@ -31,6 +31,23 @@ class kvstore{
     node *root;
     node *q;
     public:
+    node* successor(node *p)
+    {
+          node *y=NULL;
+         if(p->left!=NULL)
+         {
+             y=p->left;
+             while(y->right!=NULL)
+                  y=y->right;
+         }
+         else
+         {
+             y=p->right;
+             while(y->left!=NULL)
+                  y=y->left;
+         }
+         return y;
+    }
     pair<string,string> get(string key){
         //Your Code Here
         pair<string,string> temp = make_pair("key","value");
