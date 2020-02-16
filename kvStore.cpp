@@ -62,7 +62,7 @@ class kvstore{
     }
     node* successor(node *p)
     {
-          node *y=NULL;
+         node *y=NULL;
          if(p->left!=NULL)
          {
              y=p->left;
@@ -206,6 +206,15 @@ class kvstore{
         }
         else
         {
+          node *par=p;
+          while(par->parent!=NULL)
+          {
+            if(par->parent->left == par)
+            par->parent->lsize--;
+            else
+            par->parent->rsize--;
+            par = par->parent;
+          }
             if(p->left==NULL||p->right==NULL)
                 y=p;
             else
@@ -241,10 +250,27 @@ class kvstore{
         return false;
     }
 
-    pair<string,string> get(string key){
-        //Your Code Here
-        pair<string,string> temp = make_pair("key","value");
-        return temp;
+    bool get(string key){
+        node *p;
+        p=root;
+        node *y=NULL;
+        node *q=NULL;
+        int found=0;
+        while(p!=NULL&&found==0)
+        {
+            if(p->key->data.compare(key)==0)
+                found=1;
+            if(found==0)
+            {
+                if(p->key->data.compare(key)<0)
+                    p=p->right;
+                else
+                    p=p->left;
+            }
+        }
+        if(found == 0)
+        return false;
+        return true;
     }
 
     bool put(string key, string value){
