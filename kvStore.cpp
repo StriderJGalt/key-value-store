@@ -31,33 +31,33 @@ class kvstore{
     node *root;
     node *q;
     public:
-    void rightrotate(node *p)
+    void leftrotate(node *p)
     {
-         if(p->left==NULL)
-              return ;
+         if(p->right==NULL)
+               return ;
          else
          {
-             node *y=p->left;
-             if(y->right!=NULL)
-             {
-                      p->left=y->right;
-                      y->right->parent=p;
-             }
-             else
-                     p->left=NULL;
-             if(p->parent!=NULL)
-                     y->parent=p->parent;
-             if(p->parent==NULL)
-                   root=y;
-             else
-             {
-                 if(p==p->parent->left)
-                       p->parent->left=y;
-                 else
-                       p->parent->right=y;
-             }
-             y->right=p;
-             p->parent=y;
+               node *y=p->right;
+               if(y->left!=NULL)
+               {
+                      p->right=y->left;
+                      y->left->parent=p;
+               }
+               else
+                      p->right=NULL;
+               if(p->parent!=NULL)
+                    y->parent=p->parent;
+               if(p->parent==NULL)
+                    root=y;
+               else
+               {
+                   if(p==p->parent->left)
+                           p->parent->left=y;
+                   else
+                           p->parent->right=y;
+               }
+               y->left=p;
+               p->parent=y;
          }
     }
     node* successor(node *p)
