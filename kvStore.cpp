@@ -19,9 +19,9 @@ class node
     public:
         node(){
             key->size = 63;
-            key->data = (char *)malloc(sizeof(char)*(key->size));
+            key->data = (string *)malloc(sizeof(string)*(key->size));
             value->size = 255;
-            value->data = (char *)malloc(sizeof(char)*(value->size));
+            value->data = (string *)malloc(sizeof(string)*(value->size));
             lsize = 0;
             rsize = 0;
         }
@@ -121,6 +121,79 @@ class kvstore{
         }
         return false;
     }
+
+    void delfix(node *p)
+    {
+        node *s;
+        while(p!=root&&p->color=='b')
+        {
+            if(p->parent->left==p)
+            {
+                s=p->parent->right;
+                if(s->color=='r')
+                {
+                    s->color='b';
+                    p->parent->color='r';
+                    leftrotate(p->parent);
+                    s=p->parent->right;
+                }
+                if(s->right->color=='b'&&s->left->color=='b')
+                {
+                    s->color='r';
+                    p=p->parent;
+                }
+                else
+                {
+                    if(s->right->color=='b')
+                    {
+                        s->left->color=='b';
+                        s->color='r';
+                        rightrotate(s);
+                        s=p->parent->right;
+                    }
+                    s->color=p->parent->color;
+                    p->parent->color='b';
+                    s->right->color='b';
+                    leftrotate(p->parent);
+                    p=root;
+                }
+            }
+            else
+            {
+                s=p->parent->left;
+                if(s->color=='r')
+                {
+                    s->color='b';
+                    p->parent->color='r';
+                    rightrotate(p->parent);
+                    s=p->parent->left;
+                }
+                if(s->left->color=='b'&&s->right->color=='b')
+                {
+                    s->color='r';
+                    p=p->parent;
+                }
+                else
+                {
+                    if(s->left->color=='b')
+                    {
+                        s->right->color='b';
+                        s->color='r';
+                        leftrotate(s);
+                        s=p->parent->left;
+                    }
+                    s->color=p->parent->color;
+                    p->parent->color='b';
+                    s->left->color='b';
+                    rightrotate(p->parent);
+                    p=root;
+                }
+            }
+            p->color='b';
+            root->color='b';
+        }
+    }
+
 
     pair<string,string> get(int N){
         // Your Code Here
