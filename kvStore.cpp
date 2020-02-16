@@ -19,9 +19,9 @@ class node
     public:
         node(){
             key->size = 63;
-            key->data = (string *)malloc(sizeof(string)*(key->size));
+            key->data = (char *)malloc(sizeof(string)*(key->size));
             value->size = 255;
-            value->data = (string *)malloc(sizeof(string)*(value->size));
+            value->data = (char *)malloc(sizeof(string)*(value->size));
             lsize = 0;
             rsize = 0;
         }
