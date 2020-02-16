@@ -259,9 +259,9 @@ class kvstore{
 		node *t = new node;
 
 		t->key->data = key;
-		t->key->size = strlen(key);
-		t->value = value;
-		t->key->value = strlen(value);
+		t->key->size = key.length();
+		t->value->data = value;
+		t->value->size = value.length();
 		t->left = NULL;
 		t->right = NULL;
 		t->color = 'r';
@@ -278,12 +278,12 @@ class kvstore{
 			while(p)
 			{
 				q = p;
-				if(!strcmp(p->key->data, t->key->data))
+				if(!p->key->data.compare(t->key->data))
 				{
 					p->value->data = t->value->data;
 					return true;
 				}
-				else if(strcmp(p->key, t->key)<0)
+				else if(p->key->data.compare(t->key->data)<0)
                 {
                     p->rsize++;
 					p = p->right;
@@ -295,7 +295,7 @@ class kvstore{
 			    }
             }
 			t->parent = q;
-			if(strcmp(q->key->data, t->key->data)<0)
+			if(q->key->data.compare(t->key->data)<0)
 				q->right = t;
 			else
 				q->left = t;
