@@ -100,18 +100,18 @@ class kvstore{
             p->parent=y;
         }
     }
-    int getColor(node *&node) {
-        if (node == nullptr)
+    int getColor(node *&lode) {
+        if (lode == nullptr)
             return BLACK;
 
-        return node->color;
+        return lode->color;
     }
 
-    void setColor(node *&node, int color) {
-        if (node == nullptr)
+    void setColor(node *&lode, int color) {
+        if (lode == nullptr)
             return;
 
-        node->color = color;
+        lode->color = color;
     }
 
     void fixInsertRBTree(node *&ptr) {
@@ -122,13 +122,16 @@ class kvstore{
             grandparent = parent->parent;
             if (parent == grandparent->left) {
                 node *uncle = grandparent->right;
-                if (getColor(uncle) == RED) {
+                if (getColor(uncle) == RED) 
+                {
                     setColor(uncle, BLACK);
                     setColor(parent, BLACK);
                     setColor(grandparent, RED);
                     ptr = grandparent;
-                } else {
-                    if (ptr == parent->right) {
+                } else
+                {
+                    if (ptr == parent->right) 
+                    {
                         leftrotate(parent);
                         ptr = parent;
                         parent = ptr->parent;
@@ -137,15 +140,21 @@ class kvstore{
                     swap(parent->color, grandparent->color);
                     ptr = parent;
                 }
-            } else {
+            } 
+            else 
+            {
                 node *uncle = grandparent->left;
-                if (getColor(uncle) == RED) {
+                if (getColor(uncle) == RED) 
+                {
                     setColor(uncle, BLACK);
                     setColor(parent, BLACK);
                     setColor(grandparent, RED);
                     ptr = grandparent;
-                } else {
-                    if (ptr == parent->left) {
+                }
+                else 
+                {
+                    if (ptr == parent->left) 
+                    {
                         rightrotate(parent);
                         ptr = parent;
                         parent = ptr->parent;
@@ -199,33 +208,43 @@ class kvstore{
         if (getColor(lode) == RED || getColor(lode->left) == RED || getColor(lode->right) == RED) {
             node* child = lode->left != nullptr ? lode->left : lode->right;
 
-            if (lode == lode->parent->left) {
+            if (lode == lode->parent->left)
+            {
                 lode->parent->left = child;
                 if (child != nullptr)
                     child->parent = lode->parent;
                 setColor(child, BLACK);
                 delete (lode);
-            } else {
+            } 
+            else
+            {
                 lode->parent->right = child;
                 if (child != nullptr)
                     child->parent = lode->parent;
                 setColor(child, BLACK);
                 delete (lode);
             }
-        } else {
+        } 
+        else 
+        {
             node *sibling = nullptr;
             node *parent = nullptr;
             node *ptr = lode;
             setColor(ptr, DOUBLE_BLACK);
-            while (ptr != root && getColor(ptr) == DOUBLE_BLACK) {
+            while (ptr != root && getColor(ptr) == DOUBLE_BLACK) 
+            {
                 parent = ptr->parent;
-                if (ptr == parent->left) {
+                if (ptr == parent->left)
+                {
                     sibling = parent->right;
-                    if (getColor(sibling) == RED) {
+                    if (getColor(sibling) == RED)
+                    {
                         setColor(sibling, BLACK);
                         setColor(parent, RED);
                         leftrotate(parent);
-                    } else {
+                    }
+                    else 
+                    {
                         if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK) {
                             setColor(sibling, RED);
                             if(getColor(parent) == RED)
@@ -233,8 +252,11 @@ class kvstore{
                             else
                                 setColor(parent, DOUBLE_BLACK);
                             ptr = parent;
-                        } else {
-                            if (getColor(sibling->right) == BLACK) {
+                        } 
+                        else 
+                        {
+                            if (getColor(sibling->right) == BLACK)
+                            {
                                 setColor(sibling->left, BLACK);
                                 setColor(sibling, RED);
                                 rightrotate(sibling);
@@ -247,13 +269,18 @@ class kvstore{
                             break;
                         }
                     }
-                } else {
+                }
+                else
+                {
                     sibling = parent->left;
-                    if (getColor(sibling) == RED) {
+                    if (getColor(sibling) == RED)
+                    {
                         setColor(sibling, BLACK);
                         setColor(parent, RED);
                         rightrotate(parent);
-                    } else {
+                    }
+                    else 
+                    {
                         if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK) {
                             setColor(sibling, RED);
                             if (getColor(parent) == RED)
@@ -261,8 +288,11 @@ class kvstore{
                             else
                                 setColor(parent, DOUBLE_BLACK);
                             ptr = parent;
-                        } else {
-                            if (getColor(sibling->left) == BLACK) {
+                        } 
+                        else 
+                        {
+                            if (getColor(sibling->left) == BLACK) 
+                            {
                                 setColor(sibling->right, BLACK);
                                 setColor(sibling, RED);
                                 leftrotate(sibling);
@@ -289,52 +319,52 @@ class kvstore{
 
     void disp()
     {
-         display(root);
+        display(root);
     }
     void display(node *p)
     {
-         if(root==NULL)
-         {
-              cout<<"\nEmpty Tree.";
-              return ;
-         }
-         if(p!=NULL)
-         {
-                    cout<<"\n\t NODE: ";
-                    cout<<"\n Key: "<<p->key->data;
-                    cout<<"\n lsize: "<<p->lsize;
-                    cout<<"\n rsize: "<<p->rsize;
-                    cout<<"\n Colour: ";
-        if(p->color==BLACK)
-         cout<<"Black";
-        else
-         cout<<"Red";
-                    if(p->parent!=NULL)
-                           cout<<"\n Parent: "<<p->parent->key->data;
-                    else
-                           cout<<"\n There is no parent of the node.  ";
-                    if(p->right!=NULL)
-                           cout<<"\n Right Child: "<<p->right->key->data;
-                    else
-                           cout<<"\n There is no right child of the node.  ";
-                    if(p->left!=NULL)
-                           cout<<"\n Left Child: "<<p->left->key->data;
-                    else
-                           cout<<"\n There is no left child of the node.  ";
-                    cout<<endl;
-        if(p->left)
+        if(root==NULL)
         {
-                     cout<<"\n\nLeft:\n";
-         display(p->left);
+            cout<<"\nEmpty Tree.";
+            return ;
         }
-        if(p->right)
+        if(p!=NULL)
         {
-         cout<<"\n\nRight:\n";
-                     display(p->right);
+            cout<<"\n\t NODE: ";
+            cout<<"\n Key: "<<p->key->data;
+            cout<<"\n lsize: "<<p->lsize;
+            cout<<"\n rsize: "<<p->rsize;
+            cout<<"\n Colour: ";
+            if(p->color==BLACK)
+                cout<<"Black";
+            else
+                cout<<"Red";
+            if(p->parent!=NULL)
+                cout<<"\n Parent: "<<p->parent->key->data;
+            else
+                cout<<"\n There is no parent of the node.  ";
+            if(p->right!=NULL)
+                cout<<"\n Right Child: "<<p->right->key->data;
+            else
+                cout<<"\n There is no right child of the node.  ";
+            if(p->left!=NULL)
+                cout<<"\n Left Child: "<<p->left->key->data;
+            else
+                cout<<"\n There is no left child of the node.  ";
+            cout<<endl;
+            if(p->left)
+            {
+                cout<<"\n\nLeft:\n";
+                display(p->left);
+            }
+            if(p->right)
+            {
+                cout<<"\n\nRight:\n";
+                display(p->right);
+            }
+            /*else
+              cout<<"\nNo Right Child.\n"*/
         }
-        /*else
-         cout<<"\nNo Right Child.\n"*/
-         }
     }
 
 
@@ -401,7 +431,7 @@ class kvstore{
 
     bool del(string key){
         node *node = deleteBST(root, key);
-            fixDeleteRBTree(node);
+        fixDeleteRBTree(node);
         // if(root==NULL)
         // return false;
         // node *p;
@@ -507,7 +537,7 @@ class kvstore{
             if(curr + p->lsize + 1> N)
             {
                 if(p->left != NULL)
-                p = p->left;
+                    p = p->left;
                 else
                 {
                     std::cout<<"Left is NULL"<<endl;
@@ -518,8 +548,8 @@ class kvstore{
             {
                 if(p->right != NULL)
                 {
-                curr+=p->lsize + 1;
-                p=p->right;
+                    curr+=p->lsize + 1;
+                    p=p->right;
                 }
                 else{
                     std::cout<<"Right is NULL"<<endl;
@@ -528,7 +558,7 @@ class kvstore{
             }
             // printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
             // std::cout<<p->left<<" "<<p->right<<endl;
-       }
+        }
         return make_pair(p->key->data,p->value->data);
     }
 
