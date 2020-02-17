@@ -161,7 +161,7 @@ class kvstore{
                           p=root;
                       }
               }
-              else
+              else if(p->parent->right==p)
               {
                       s=p->parent->left;
                       if(s->color=='r')
