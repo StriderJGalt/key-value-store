@@ -100,16 +100,14 @@ class kvstore{
             p->parent=y;
         }
     }
-    int getColor(node *&lode) 
-    {
+    int getColor(node *&lode) {
         if (lode == nullptr)
             return BLACK;
 
         return lode->color;
     }
 
-    void setColor(node *&lode, int color) 
-    {
+    void setColor(node *&lode, int color) {
         if (lode == nullptr)
             return;
 
@@ -119,12 +117,10 @@ class kvstore{
     void fixInsertRBTree(node *&ptr) {
         node *parent = nullptr;
         node *grandparent = nullptr;
-        while (ptr != root && getColor(ptr) == RED && getColor(ptr->parent) == RED) 
-        {
+        while (ptr != root && getColor(ptr) == RED && getColor(ptr->parent) == RED) {
             parent = ptr->parent;
             grandparent = parent->parent;
-            if (parent == grandparent->left)
-            {
+            if (parent == grandparent->left) {
                 node *uncle = grandparent->right;
                 if (getColor(uncle) == RED)
                 {
@@ -132,8 +128,7 @@ class kvstore{
                     setColor(parent, BLACK);
                     setColor(grandparent, RED);
                     ptr = grandparent;
-                } 
-                else
+                } else
                 {
                     if (ptr == parent->right)
                     {
@@ -173,8 +168,7 @@ class kvstore{
         setColor(root, BLACK);
     }
 
-    node* deleteBST(node *&root,  string data)
-    {
+    node* deleteBST(node *&root,  string data) {
         if (root == nullptr)
             return root;
 
@@ -202,7 +196,125 @@ class kvstore{
 
         return ptr;
     }
+    void fixDeleteRBTree(node *&lode) {
+        if (lode == nullptr)
+            return;
 
+        if (lode == root) {
+            root = nullptr;
+            return;
+        }
+
+        if (getColor(lode) == RED || getColor(lode->left) == RED || getColor(lode->right) == RED) {
+            node* child = lode->left != nullptr ? lode->left : lode->right;
+
+            if (lode == lode->parent->left)
+            {
+                lode->parent->left = child;
+                if (child != nullptr)
+                    child->parent = lode->parent;
+                setColor(child, BLACK);
+                delete (lode);
+            }
+            else
+            {
+                lode->parent->right = child;
+                if (child != nullptr)
+                    child->parent = lode->parent;
+                setColor(child, BLACK);
+                delete (lode);
+            }
+        }
+        else
+        {
+            node *sibling = nullptr;
+            node *parent = nullptr;
+            node *ptr = lode;
+            setColor(ptr, DOUBLE_BLACK);
+            while (ptr != root && getColor(ptr) == DOUBLE_BLACK)
+            {
+                parent = ptr->parent;
+                if (ptr == parent->left)
+                {
+                    sibling = parent->right;
+                    if (getColor(sibling) == RED)
+                    {
+                        setColor(sibling, BLACK);
+                        setColor(parent, RED);
+                        leftrotate(parent);
+                    }
+                    else
+                    {
+                        if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK) {
+                            setColor(sibling, RED);
+                            if(getColor(parent) == RED)
+                                setColor(parent, BLACK);
+                            else
+                                setColor(parent, DOUBLE_BLACK);
+                            ptr = parent;
+                        }
+                        else
+                        {
+                            if (getColor(sibling->right) == BLACK)
+                            {
+                                setColor(sibling->left, BLACK);
+                                setColor(sibling, RED);
+                                rightrotate(sibling);
+                                sibling = parent->right;
+                            }
+                            setColor(sibling, parent->color);
+                            setColor(parent, BLACK);
+                            setColor(sibling->right, BLACK);
+                            leftrotate(parent);
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    sibling = parent->left;
+                    if (getColor(sibling) == RED)
+                    {
+                        setColor(sibling, BLACK);
+                        setColor(parent, RED);
+                        rightrotate(parent);
+                    }
+                    else
+                    {
+                        if (getColor(sibling->left) == BLACK && getColor(sibling->right) == BLACK) {
+                            setColor(sibling, RED);
+                            if (getColor(parent) == RED)
+                                setColor(parent, BLACK);
+                            else
+                                setColor(parent, DOUBLE_BLACK);
+                            ptr = parent;
+                        }
+                        else
+                        {
+                            if (getColor(sibling->left) == BLACK)
+                            {
+                                setColor(sibling->right, BLACK);
+                                setColor(sibling, RED);
+                                leftrotate(sibling);
+                                sibling = parent->left;
+                            }
+                            setColor(sibling, parent->color);
+                            setColor(parent, BLACK);
+                            setColor(sibling->left, BLACK);
+                            rightrotate(parent);
+                            break;
+                        }
+                    }
+                }
+            }
+            if (lode == lode->parent->left)
+                lode->parent->left = nullptr;
+            else
+                lode->parent->right = nullptr;
+            delete(lode);
+            setColor(root, BLACK);
+        }
+    }
     void delfix(node *p)
     {
         node *s;
