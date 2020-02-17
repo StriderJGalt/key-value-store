@@ -122,7 +122,7 @@ int main()
 
 	for(int i=0;i<201;i++)
 	{
-		int x = rand()%4;
+		int x = rand()%5;
 		// int x = 3;
 		if(x==0)
 		{
@@ -157,8 +157,10 @@ int main()
 			db_size--;
 			db.erase(itr);
 			bool check2 = kv.get(key);
-			if(check2 == true)
+			if(check2 == true){
 				incorrect = true;
+				printf("Delete wrong\n");
+			}
 		}
 		else if(x==3 && db.size() > 0)
 		{
@@ -181,7 +183,7 @@ int main()
 			for(int i=0;i<rem;i++)itr++;
 			string key = itr->first;
 			bool check = kv.del(rem);
-			std::cout<<key<<endl;
+			// std::cout<<key<<endl;
 			db.erase(itr);
 			db_size--;
 			bool check2 = kv.get(key);

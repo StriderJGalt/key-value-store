@@ -71,15 +71,23 @@ class kvstore{
         node *y=NULL;
         if(p->left!=NULL)
         {
+            p->lsize--;
             y=p->left;
             while(y->right!=NULL)
-                y=y->right;
+            {
+              y->rsize--;
+              y=y->right;
+            }
         }
         else
         {
+            p->rsize--;
             y=p->right;
             while(y->left!=NULL)
-                y=y->left;
+            {
+              y->lsize--;
+              y=y->left;
+            }
         }
         return y;
     }
@@ -115,6 +123,77 @@ class kvstore{
             y->right=p;
             y->rsize+=(p->lsize+p->rsize) + 1;
             p->parent=y;
+        }
+    }
+    void delfix(node *p)
+    {
+        node *s;
+        while(p&&p!=root&&p->color=='b')
+        {
+              if(p->parent->left==p)
+              {
+                      s=p->parent->right;
+                      if(s->color=='r')
+                      {
+                             s->color='b';
+                             p->parent->color='r';
+                             leftrotate(p->parent);
+                             s=p->parent->right;
+                      }
+                      if(s->right->color=='b'&&s->left->color=='b')
+                      {
+                             s->color='r';
+                             p=p->parent;
+                      }
+                      else
+                      {
+                          if(s->right->color=='b')
+                          {
+                                 s->left->color=='b';
+                                 s->color='r';
+                                 rightrotate(s);
+                                 s=p->parent->right;
+                          }
+                          s->color=p->parent->color;
+                          p->parent->color='b';
+                          s->right->color='b';
+                          leftrotate(p->parent);
+                          p=root;
+                      }
+              }
+              else
+              {
+                      s=p->parent->left;
+                      if(s->color=='r')
+                      {
+                            s->color='b';
+                            p->parent->color='r';
+                            rightrotate(p->parent);
+                            s=p->parent->left;
+                      }
+                      if(s->left->color=='b'&&s->right->color=='b')
+                      {
+                            s->color='r';
+                            p=p->parent;
+                      }
+                      else
+                      {
+                            if(s->left->color=='b')
+                            {
+                                  s->right->color='b';
+                                  s->color='r';
+                                  leftrotate(s);
+                                  s=p->parent->left;
+                            }
+                            s->color=p->parent->color;
+                            p->parent->color='b';
+                            s->left->color='b';
+                            rightrotate(p->parent);
+                            p=root;
+                      }
+              }
+           p->color='b';
+           root->color='b';
         }
     }
 
@@ -244,6 +323,8 @@ class kvstore{
     }
 
     bool del(string key){
+        if(root==NULL)
+        return false;
         node *p;
         p=root;
         node *y=NULL;
@@ -251,7 +332,7 @@ class kvstore{
         int found=0;
         while(p!=NULL&&found==0)
         {
-            if(p->key->data.compare(key)==0)
+            if(!p->key->data.compare(key))
                 found=1;
             if(found==0)
             {
@@ -304,9 +385,10 @@ class kvstore{
             {
                 p->color=y->color;
                 p->key->data=y->key->data;
+                p->value->data=y->value->data;
             }
-            // if(y->color=='b')
-            // delfix(q);
+            if(y->color=='b')
+            delfix(q);
         }
         return false;
     }
@@ -365,8 +447,8 @@ class kvstore{
                     break;
                 }
             }
-            printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
-            std::cout<<p->left<<" "<<p->right<<endl;
+            // printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
+            // std::cout<<p->left<<" "<<p->right<<endl;
        }
         return make_pair(p->key->data,p->value->data);
     }
