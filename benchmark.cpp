@@ -123,9 +123,9 @@ int main()
 	// -------------------------------------------------------------------------------------- 
 	// start correcting from here downwards
 	// ----------------------------------------------------------------------------------------
-	for(int k=0;k<1;k++)
+	for(int k12=0;k12<1;k12++)
 	{
-        std::cout<<"k:"<<k<<endl;
+        std::cout<<"k:"<<k12<<endl;
 		int x = rand()%5;
 		if(x==0)
 		{
@@ -165,9 +165,8 @@ int main()
             Slice key,value;
 			for(int i=0;i<rem;i++)itr++;
             {
-                string key = itr->first;
-                strcpy(key.data,k.c_str());
-                key.size = k;
+                strcpy(key.data,itr->first);
+                key.size = key.length();
             }
 			bool check = kv.del(&key);
 			db_size--;
