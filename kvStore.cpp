@@ -40,12 +40,12 @@ class kvstore{
         else
         {
             node *y=p->right;
-            p->rsize-=(y->lsize + y->rsize);
+            p->rsize=0;
             if(y->left!=NULL)
             {
                 p->right=y->left;
                 p->rsize+=p->right->lsize + p->right->rsize;
-                y->lsize-=p->right->lsize + p->right->rsize;
+                y->lsize=0;
                 y->left->parent=p;
             }
             else
@@ -62,7 +62,7 @@ class kvstore{
                     p->parent->right=y;
             }
             y->left=p;
-            y->lsize+=p->lsize + p->rsize;
+            y->lsize+=p->lsize + p->rsize + 1;
             p->parent=y;
         }
     }
@@ -91,12 +91,12 @@ class kvstore{
         else
         {
             node *y=p->left;
-            p->lsize-=(p->left->lsize+p->left->rsize);
+            p->lsize=0;
             if(y->right!=NULL)
             {
                 p->left=y->right;
                 p->lsize+=(p->left->lsize+p->left->rsize);
-                y->rsize-=(p->left->lsize+p->left->rsize);
+                y->rsize=0;
                 y->right->parent=p;
             }
             else
@@ -113,146 +113,74 @@ class kvstore{
                     p->parent->right=y;
             }
             y->right=p;
-            y->rsize+=(p->lsize+p->rsize);
+            y->rsize+=(p->lsize+p->rsize) + 1;
             p->parent=y;
         }
     }
 
     void insertfix(node *t)
-    {
-        node *u;
-        if(root == t)
-        {
-            t->color = 'b';
-            return ;
-        }
-        while(t->parent && t->parent->color == 'r')
-        {
-            node *g = t->parent->parent;
-            if(g->left == t->parent)
-            {
-                if(g->right)
-                {
-                    u = g->right;
-                    if(u->color == 'r')
-                    {
-                        t->parent->color = 'b';
-                        u->color = 'b';
-                        g->color='r';
-                        t=g;
-                    }
-                }
-                else{
-                    if(t->parent->right == t)
-                    {
-                        t = t->parent;
-                        leftrotate(t);
-                    }
-                    t->parent->color = 'b';
-                    g->color = 'r';
-                    rightrotate(g);
-                }
-            }
-            else{
-                if(g->left)
-                {
-                    u=g->left;
-                    if(u->color == 'r')
-                    {
-                        t->parent->color = 'b';
-                        u->color='b';
-                        g->color='r';
-                        t=g;
-                    }
-                }
-                else
-                {
-                    if(t->parent->left == t)
-                    {
-                        t = t->parent;
-                        rightrotate(t);
-                    }
-                    t->parent->color = 'b';
-                    g->color = 'r';
-                    leftrotate(g);
-                }
-            }
-            root->color = 'b';
-            return ;
-        }
-    }
-
-    void delfix(node *p)
-    {
-        node *s;
-        while(p!=root&&p->color=='b')
-        {
-            if(p->parent->left==p)
-            {
-                s=p->parent->right;
-                if(s->color=='r')
-                {
-                    s->color='b';
-                    p->parent->color='r';
-                    leftrotate(p->parent);
-                    s=p->parent->right;
-                }
-                if(s->right->color=='b'&&s->left->color=='b')
-                {
-                    s->color='r';
-                    p=p->parent;
-                }
-                else
-                {
-                    if(s->right->color=='b')
-                    {
-                        s->left->color='b'; //==
-                        s->color='r';
-                        rightrotate(s);
-                        s=p->parent->right;
-                    }
-                    s->color=p->parent->color;
-                    p->parent->color='b';
-                    s->right->color='b';
-                    leftrotate(p->parent);
-                    p=root;
-                }
-            }
-            else
-            {
-                s=p->parent->left;
-                if(s->color=='r')
-                {
-                    s->color='b';
-                    p->parent->color='r';
-                    rightrotate(p->parent);
-                    s=p->parent->left;
-                }
-                if(s->left->color=='b'&&s->right->color=='b')
-                {
-                    s->color='r';
-                    p=p->parent;
-                }
-                else
-                {
-                    if(s->left->color=='b')
-                    {
-                        s->right->color='b';
-                        s->color='r';
-                        leftrotate(s);
-                        s=p->parent->left;
-                    }
-                    s->color=p->parent->color;
-                    p->parent->color='b';
-                    s->left->color='b';
-                    rightrotate(p->parent);
-                    p=root;
-                }
-            }
-            p->color='b';
-            root->color='b';
-        }
-    }
+  {
+      node *u;
+      if(root == t)
+      {
+          t->color = 'b';
+          return ;
+      }
+      while(t->parent && t->parent->color == 'r')
+      {
+          node *g = t->parent->parent;
+          if(g->left == t->parent)
+          {
+              if(g->right)
+              {
+                  u = g->right;
+                  if(u->color == 'r')
+                  {
+                      t->parent->color = 'b';
+                      u->color = 'b';
+                      g->color='r';
+                      t=g;
+                  }
+              }
+              else{
+                  if(t->parent->right == t)
+                  {
+                      t = t->parent;
+                      leftrotate(t);
+                  }
+                  t->parent->color = 'b';
+                  g->color = 'r';
+                  rightrotate(g);
+              }
+          }
+          else{
+              if(g->left)
+              {
+                  u=g->left;
+                  if(u->color == 'r')
+                  {
+                      t->parent->color = 'b';
+                      u->color='b';
+                      g->color='r';
+                      t=g;
+                  }
+              }
+              else
+              {
+                  if(t->parent->left == t)
+                  {
+                      t = t->parent;
+                      rightrotate(t);
+                  }
+                  t->parent->color = 'b';
+                  g->color = 'r';
+                  leftrotate(g);
+              }
+          }
+          root->color = 'b';
+          return ;
+      }
+  }
 
     bool put(string key, string value)
     {
@@ -282,7 +210,16 @@ class kvstore{
                 q = p;
                 if(!p->key->data.compare(t->key->data))
                 {
-                    p->value->data = t->value->data;
+                    p->value->data = value;
+                    node *par=p;
+                    while(par!=root)
+                    {
+                        if(par->parent->left == par)
+                            par->parent->lsize--;
+                        else
+                            par->parent->rsize--;
+                        par = par->parent;
+                    }
                     return true;
                 }
                 else if(p->key->data.compare(t->key->data)<0)
@@ -398,9 +335,10 @@ class kvstore{
     }
 
     pair<string,string> get(int N){
+        N++;
         node *p;
         p=root;
-        if(p->lsize+p->rsize < N)
+        if(p->lsize+p->rsize + 1< N)
             return make_pair("None","None");
         int curr = 0;
         while(p->lsize + curr + 1 != N)
@@ -430,10 +368,11 @@ class kvstore{
             printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
             std::cout<<p->left<<" "<<p->right<<endl;
        }
-        return make_pair(p->key->data,p->value->data);           
+        return make_pair(p->key->data,p->value->data);
     }
 
     bool del(int N){
+        N++;
         node *p;
         p=root;
         if(p->lsize+p->rsize + 1 < N)
@@ -450,5 +389,54 @@ class kvstore{
             }
         }
         return del(p->key->data);
+    }
+    void disp()
+    {
+         display(root);
+    }
+    void display(node *p)
+    {
+         if(root==NULL)
+         {
+              cout<<"\nEmpty Tree.";
+              return ;
+         }
+         if(p!=NULL)
+         {
+                    cout<<"\n\t NODE: ";
+                    cout<<"\n Key: "<<p->key->data;
+                    cout<<"\n lsize: "<<p->lsize;
+                    cout<<"\n rsize: "<<p->rsize;
+                    cout<<"\n Colour: ";
+        if(p->color=='b')
+         cout<<"Black";
+        else
+         cout<<"Red";
+                    if(p->parent!=NULL)
+                           cout<<"\n Parent: "<<p->parent->key->data;
+                    else
+                           cout<<"\n There is no parent of the node.  ";
+                    if(p->right!=NULL)
+                           cout<<"\n Right Child: "<<p->right->key->data;
+                    else
+                           cout<<"\n There is no right child of the node.  ";
+                    if(p->left!=NULL)
+                           cout<<"\n Left Child: "<<p->left->key->data;
+                    else
+                           cout<<"\n There is no left child of the node.  ";
+                    cout<<endl;
+        if(p->left)
+        {
+                     cout<<"\n\nLeft:\n";
+         display(p->left);
+        }
+        if(p->right)
+        {
+         cout<<"\n\nRight:\n";
+                     display(p->right);
+        }
+        /*else
+         cout<<"\nNo Right Child.\n"*/
+         }
     }
 };

@@ -1,5 +1,5 @@
 #include<bits/stdc++.h>
-#include <unistd.h> 
+#include <unistd.h>
 #include <pthread.h>
 #include <time.h>
 #include "kvStore.cpp"
@@ -32,8 +32,8 @@ map<string,string> db;
 int db_size = 0;
 int num = 0;
 
-void *myThreadFun(void *vargp) 
-{ 
+void *myThreadFun(void *vargp)
+{
 	int transactions=0;
 	clock_t start = clock();
 	int time = 10;
@@ -41,10 +41,10 @@ void *myThreadFun(void *vargp)
 	while((float(tt-start)/CLOCKS_PER_SECOND)<=time)
 	{
 
-		for(int i=0;i<10000;i++)
+		for(int i=0;i<1000000;i++)
 		{
 			transactions+=1;
-			int x = rand()%4;
+			int x = rand()%5;
 			if(x==0)
 			{
 				string k = random_key(10);
@@ -63,7 +63,7 @@ void *myThreadFun(void *vargp)
 			{
 				int temp=db_size;
 				if (temp == 0)
-					continue;		
+					continue;
 				int rem = rand()%temp;
 				pair <string,string> check = kv.get(rem);
 				bool check2 = kv.del(check.first);
@@ -90,8 +90,8 @@ void *myThreadFun(void *vargp)
 		tt=clock();
 	}
 	cout<<transactions/time<<endl;
-	return NULL;  
-} 
+	return NULL;
+}
 
 int main()
 {
@@ -105,7 +105,7 @@ int main()
 /*     kv.put("gde","Val 8"); */
 /*     kv.put("hde","Val 9"); */
 /*     std::cout<<kv.get(9).second<<endl; */
-	for(int i=0;i<100;i++)
+	for(int i=0;i<10000;i++)
 	{
 		int k = rand()%64 + 1;
 		int v = rand()%256 + 1;
@@ -114,13 +114,16 @@ int main()
 		db.insert(pair<string,string>(key,value));
 		kv.put(key,value);
 		db_size++;
+		// kv.disp();
+		// printf("\n\nNew thing\n\n");
 	}
 
 	bool incorrect = false;
 
-	for(int i=0;i<10;i++)
+	for(int i=0;i<201;i++)
 	{
-		int x = rand()%4;
+		// int x = rand()%4;
+		int x = 3;
 		if(x==0)
 		{
 			string k = random_key(10);
@@ -143,7 +146,7 @@ int main()
 			if(check2 == false || check1 != ans)
 				incorrect = true;
 		}
-		else if(x==2)
+		else if(x==9 && db.size() > 0)
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
@@ -157,7 +160,7 @@ int main()
 			if(check2 == true)
 				incorrect = true;
 		}
-		else if(x==3)
+		else if(x==3 && db.size() > 0)
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
@@ -165,12 +168,12 @@ int main()
 			map<string,string>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
 			if(check.first != itr->first || check.second != itr->second)
-            {
-                incorrect = true;
-		        std::cout<<check.first<<" "<<" "<<itr->first<<" "<<endl;
-            }
-        }
-		else if(x==4)
+      {
+          incorrect = true;
+					std::cout<<check.first<<" "<<" "<<itr->first<<" "<<endl;
+      }
+    }
+		else if(x==4 && db.size() > 0)
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
@@ -178,6 +181,7 @@ int main()
 			for(int i=0;i<rem;i++)itr++;
 			string key = itr->first;
 			bool check = kv.del(rem);
+			std::cout<<key<<endl;
 			db.erase(itr);
 			db_size--;
 			bool check2 = kv.get(key);
@@ -193,13 +197,13 @@ int main()
 	int threads = 4;
 
 	/* pthread_t tid[threads]; */
-	/* for (int i = 0; i < threads; i++) */ 
+	/* for (int i = 0; i < threads; i++) */
 	/* { */
 	/* 	tid[i] = i; */
-        /* pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); */ 
+        /* pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); */
 	/* } */
 	/* for(int i=0;i<threads;i++) */
 	/* 	pthread_join(tid[i],NULL); */
-    
+
     return 0;
 }
