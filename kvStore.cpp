@@ -210,7 +210,7 @@ class kvstore{
                 q = p;
                 if(!p->key->data.compare(t->key->data))
                 {
-                    p->value->data = value;
+                    // p->value->data = value;
                     node *par=p;
                     while(par!=root)
                     {

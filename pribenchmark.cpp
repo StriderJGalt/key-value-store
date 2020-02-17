@@ -122,8 +122,8 @@ int main()
 
 	for(int i=0;i<201;i++)
 	{
-		// int x = rand()%4;
-		int x = 3;
+		int x = rand()%4;
+		// int x = 3;
 		if(x==0)
 		{
 			string k = random_key(10);
@@ -146,7 +146,7 @@ int main()
 			if(check2 == false || check1 != ans)
 				incorrect = true;
 		}
-		else if(x==9 && db.size() > 0)
+		else if(x==2 && db.size() > 0)
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
