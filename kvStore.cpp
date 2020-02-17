@@ -518,10 +518,10 @@ class kvstore{
                 }
                 else
                   break;
-        }
+            }
+      }
         del(p->key);
         return true; //not sure
-    }
   }
 
 };
