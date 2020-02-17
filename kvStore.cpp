@@ -21,8 +21,8 @@ class node
         node(){
             key = new Slice;
             value = new Slice;
-            key->size = 65;
-            key->data = (char *)malloc(sizeof(char)*(65)); 
+            key->size = 64;
+            key->data = (char *)malloc(sizeof(char)*(65));
             value->size = 255;
             value->data = (char *)malloc(sizeof(char)*(257));
             lsize = 0;
@@ -100,7 +100,7 @@ class kvstore{
             p->parent=y;
         }
     }
-    int getColor(node *&lode) 
+    int getColor(node *&lode)
     {
         if (lode == nullptr)
             return BLACK;
@@ -108,7 +108,7 @@ class kvstore{
         return lode->color;
     }
 
-    void setColor(node *&lode, int color) 
+    void setColor(node *&lode, int color)
     {
         if (lode == nullptr)
             return;
@@ -119,7 +119,7 @@ class kvstore{
     void fixInsertRBTree(node *&ptr) {
         node *parent = nullptr;
         node *grandparent = nullptr;
-        while (ptr != root && getColor(ptr) == RED && getColor(ptr->parent) == RED) 
+        while (ptr != root && getColor(ptr) == RED && getColor(ptr->parent) == RED)
         {
             parent = ptr->parent;
             grandparent = parent->parent;
@@ -132,7 +132,7 @@ class kvstore{
                     setColor(parent, BLACK);
                     setColor(grandparent, RED);
                     ptr = grandparent;
-                } 
+                }
                 else
                 {
                     if (ptr == parent->right)
@@ -299,65 +299,11 @@ class kvstore{
         return y;
     }
 
-
-    // void disp()
-    // {
-    //     display(root);
-    // }
-    // void display(node *p)
-    // {
-    //     if(root==NULL)
-    //     {
-    //         cout<<"\nEmpty Tree.";
-    //         return ;
-    //     }
-    //     if(p!=NULL)
-    //     {
-    //         cout<<"\n\t NODE: ";
-    //         cout<<"\n Key: "<<p->key->data;
-    //         cout<<"\n lsize: "<<p->lsize;
-    //         cout<<"\n rsize: "<<p->rsize;
-    //         cout<<"\n Colour: ";
-    //         if(p->color==BLACK)
-    //             cout<<"Black";
-    //         else
-    //             cout<<"Red";
-    //         if(p->parent!=NULL)
-    //             cout<<"\n Parent: "<<p->parent->key->data;
-    //         else
-    //             cout<<"\n There is no parent of the node.  ";
-    //         if(p->right!=NULL)
-    //             cout<<"\n Right Child: "<<p->right->key->data;
-    //         else
-    //             cout<<"\n There is no right child of the node.  ";
-    //         if(p->left!=NULL)
-    //             cout<<"\n Left Child: "<<p->left->key->data;
-    //         else
-    //             cout<<"\n There is no left child of the node.  ";
-    //         cout<<endl;
-    //         if(p->left)
-    //         {
-    //             cout<<"\n\nLeft:\n";
-    //             display(p->left);
-    //         }
-    //         if(p->right)
-    //         {
-    //             cout<<"\n\nRight:\n";
-    //             display(p->right);
-    //         }
-    //         /*else
-    //           cout<<"\nNo Right Child.\n"*/
-    //     }
-    // }
-
-
-
-
     bool put(Slice *key, Slice *value)
     {
         //Your Code Here
-        register node *p, *q;
-        register node *t = new node;
+        node *p, *q, *par;
+        node *t = new node;
 
         strcpy(t->key->data,key->data);
         t->key->size = key->size;
@@ -374,13 +320,15 @@ class kvstore{
         else{
             p = root;
             q = NULL;
+            register int cmp;
             while(p)
             {
                 q = p;
-                if(!strcmp(p->key->data,t->key->data))
+                cmp = strcmp(p->key->data,t->key->data);
+                if(!cmp)
                 {
                     // p->value->data = value;
-                    node *par=p;
+                    par=p;
                     while(par!=root)
                     {
                         if(par->parent->left == par)
@@ -391,7 +339,7 @@ class kvstore{
                     }
                     return true;
                 }
-                else if(strcmp(p->key->data,t->key->data)<0)
+                else if(cmp<0)
                 {
                     p->rsize++;
                     p = p->right;
@@ -525,10 +473,7 @@ class kvstore{
                 if(p->left != NULL)
                     p = p->left;
                 else
-                {
-                    std::cout<<"Left is NULL"<<endl;
                     break;
-                }
             }
             else if(curr + p->lsize + 1< N)
             {
@@ -537,16 +482,14 @@ class kvstore{
                     curr+=p->lsize + 1;
                     p=p->right;
                 }
-                else{
-                    std::cout<<"Right is NULL"<<endl;
-                    break;
-                }
+                else
+                  break;
             }
             // printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
             // std::cout<<p->left<<" "<<p->right<<endl;
         }
         strcpy(key->data,p->key->data);
-        strcpy(value->data,p->value->data);        
+        strcpy(value->data,p->value->data);
         return true;
     }
 
@@ -559,21 +502,26 @@ class kvstore{
         int curr = 0;
         while(p->lsize + curr + 1 != N)
         {
-            if(curr + p->lsize + 1> N && p->left != NULL)
-                p = p->left;
-            else if(curr + p->lsize + 1< N && p->right != NULL)
+            if(curr + p->lsize + 1> N)
             {
-                curr+=p->lsize + 1;
-                p = p->right;
+                if(p->left != NULL)
+                    p = p->left;
+                else
+                    break;
             }
+            else if(curr + p->lsize + 1< N)
+            {
+                if(p->right != NULL)
+                {
+                    curr+=p->lsize + 1;
+                    p=p->right;
+                }
+                else
+                  break;
         }
+        del(p->key);
         return true; //not sure
     }
+  }
 
 };
-
-int main()
-{
-    cout<<"hello";
-    return 0;
-}
