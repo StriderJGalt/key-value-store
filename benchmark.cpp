@@ -95,7 +95,7 @@ void *myThreadFun(void *vargp)
 
 int main()
 {
-	for(int i=0;i<10;i++)
+	for(int i=0;i<10000001;i++)
 	{
 		int k = rand()%64 + 1;
 		int v = rand()%256 + 1;
@@ -104,13 +104,15 @@ int main()
 		db.insert(pair<string,string>(key,value));
 		kv.put(key,value);
 		db_size++;
+        /* std::cout<<"i:"<<i<<endl; */
 	}
 
 	bool incorrect = false;
 
-	for(int i=0;i<100000;i++)
+	for(int k=0;k<1;k++)
 	{
-		int x = rand()%3;
+        std::cout<<"k:"<<k<<endl;
+		int x = rand()%5;
 		if(x==0)
 		{
 			string k = random_key(10);
@@ -177,7 +179,7 @@ int main()
 		cout<<0<<endl;
 		return 0;
 	}
-	/* int threads = 4; */
+	int threads = 4;
 
 	/* pthread_t tid[threads]; */
 	/* for (int i = 0; i < threads; i++) */ 
