@@ -133,21 +133,21 @@ class kvstore{
               if(p->parent->left==p)
               {
                       s=p->parent->right;
-                      if(s->color=='r')
+                      if(s&&s->color=='r')
                       {
                              s->color='b';
                              p->parent->color='r';
                              leftrotate(p->parent);
                              s=p->parent->right;
                       }
-                      if(s->right->color=='b'&&s->left->color=='b')
+                      if(s && s->right && s->left && s->right->color=='b'&&s->left->color=='b')
                       {
                              s->color='r';
                              p=p->parent;
                       }
                       else
                       {
-                          if(s->right->color=='b')
+                          if(s && s->right &&s->right->color=='b')
                           {
                                  s->left->color=='b';
                                  s->color='r';
@@ -164,21 +164,21 @@ class kvstore{
               else if(p->parent->right==p)
               {
                       s=p->parent->left;
-                      if(s->color=='r')
+                      if(s && s->color=='r')
                       {
                             s->color='b';
                             p->parent->color='r';
                             rightrotate(p->parent);
                             s=p->parent->left;
                       }
-                      if(s->left->color=='b'&&s->right->color=='b')
+                      if(s && s->right && s->left && s->left->color=='b'&&s->right->color=='b')
                       {
                             s->color='r';
                             p=p->parent;
                       }
-                      else
+                      else if ( s && s->left )
                       {
-                            if(s->left->color=='b')
+                            if(s && s->left && s->left->color=='b')
                             {
                                   s->right->color='b';
                                   s->color='r';
