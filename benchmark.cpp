@@ -108,7 +108,7 @@ int main()
 
 	bool incorrect = false;
 
-	for(int i=0;i<10;i++)
+	for(int i=0;i<100000;i++)
 	{
 		int x = rand()%5;
 		if(x==0)
@@ -177,15 +177,15 @@ int main()
 		cout<<0<<endl;
 		return 0;
 	}
-	int threads = 4;
+	/* int threads = 4; */
 
-	pthread_t tid[threads];
-	for (int i = 0; i < threads; i++) 
-	{
-		tid[i] = i;
-        pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); 
-	}
-	for(int i=0;i<threads;i++)
-		pthread_join(tid[i],NULL);
+	/* pthread_t tid[threads]; */
+	/* for (int i = 0; i < threads; i++) */ 
+	/* { */
+	/* 	tid[i] = i; */
+        /* pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); */ 
+	/* } */
+	/* for(int i=0;i<threads;i++) */
+	/* 	pthread_join(tid[i],NULL); */
 	return 0;
 }

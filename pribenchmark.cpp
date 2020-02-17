@@ -32,66 +32,66 @@ map<string,string> db;
 int db_size = 0;
 int num = 0;
 
-void *myThreadFun(void *vargp)
-{
-	int transactions=0;
-	clock_t start = clock();
-	int time = 10;
-	clock_t tt = clock();
-	while((float(tt-start)/CLOCKS_PER_SECOND)<=time)
-	{
-
-		for(int i=0;i<1000000;i++)
-		{
-			transactions+=1;
-			int x = rand()%5;
-			if(x==0)
-			{
-				string k = random_key(10);
-				bool ans = kv.get(k);
-			}
-			else if(x==1)
-			{
-				int k = rand()%64 + 1;
-				int v = rand()%256 + 1;
-				string key = random_key(k);
-				string value = random_value(v);
-				bool ans = kv.put(key,value);
-				db_size++;
-			}
-			else if(x==2)
-			{
-				int temp=db_size;
-				if (temp == 0)
-					continue;
-				int rem = rand()%temp;
-				pair <string,string> check = kv.get(rem);
-				bool check2 = kv.del(check.first);
-				db_size--;
-			}
-			else if(x==3)
-			{
-				int temp=db_size;
-				if (temp == 0)
-					continue;
-				int rem = rand()%temp;
-				pair <string,string> check = kv.get(rem);
-			}
-			else if(x==4)
-			{
-				int temp=db_size;
-				if (temp == 0)
-					continue;
-				int rem = rand()%temp;
-				bool check = kv.del(rem);
-				db_size--;
-			}
-		}
-		tt=clock();
-	}
-	cout<<transactions/time<<endl;
-	return NULL;
-}
+// void *myThreadFun(void *vargp)
+// {
+// 	int transactions=0;
+// 	clock_t start = clock();
+// 	int time = 10;
+// 	clock_t tt = clock();
+// 	while((float(tt-start)/CLOCKS_PER_SECOND)<=time)
+// 	{
+//
+// 		for(int i=0;i<1000000;i++)
+// 		{
+// 			transactions+=1;
+// 			int x = rand()%5;
+// 			if(x==0)
+// 			{
+// 				string k = random_key(10);
+// 				bool ans = kv.get(k);
+// 			}
+// 			else if(x==1)
+// 			{
+// 				int k = rand()%64 + 1;
+// 				int v = rand()%256 + 1;
+// 				string key = random_key(k);
+// 				string value = random_value(v);
+// 				bool ans = kv.put(key,value);
+// 				db_size++;
+// 			}
+// 			else if(x==2)
+// 			{
+// 				int temp=db_size;
+// 				if (temp == 0)
+// 					continue;
+// 				int rem = rand()%temp;
+// 				pair <string,string> check = kv.get(rem);
+// 				bool check2 = kv.del(check.first);
+// 				db_size--;
+// 			}
+// 			else if(x==3)
+// 			{
+// 				int temp=db_size;
+// 				if (temp == 0)
+// 					continue;
+// 				int rem = rand()%temp;
+// 				pair <string,string> check = kv.get(rem);
+// 			}
+// 			else if(x==4)
+// 			{
+// 				int temp=db_size;
+// 				if (temp == 0)
+// 					continue;
+// 				int rem = rand()%temp;
+// 				bool check = kv.del(rem);
+// 				db_size--;
+// 			}
+// 		}
+// 		tt=clock();
+// 	}
+// 	cout<<transactions/time<<endl;
+// 	return NULL;
+// }
 
 int main()
 {
@@ -105,24 +105,24 @@ int main()
 /*     kv.put("gde","Val 8"); */
 /*     kv.put("hde","Val 9"); */
 /*     std::cout<<kv.get(9).second<<endl; */
-	for(int i=0;i<10000;i++)
+	for(int i=0;i<11;i++)
 	{
-		int k = rand()%64 + 1;
+		int k = rand()%4 + 1;
 		int v = rand()%256 + 1;
 		string key = random_key(k);
 		string value = random_value(v);
 		db.insert(pair<string,string>(key,value));
 		kv.put(key,value);
 		db_size++;
-		// kv.disp();
-		// printf("\n\nNew thing\n\n");
+		kv.disp();
+		printf("\n\nNew thing\n\n");
 	}
 
 	bool incorrect = false;
 
-	for(int i=0;i<20000;i++)
+	for(int i=0;i<20;i++)
 	{
-		int x = rand()%5;
+		int x = rand()%3;
 		// int x = 3;
 		if(x==0)
 		{
@@ -196,7 +196,7 @@ int main()
 		cout<<0<<endl;
 		return 0;
 	}
-	int threads = 4;
+	// int threads = 4;
 
 	/* pthread_t tid[threads]; */
 	/* for (int i = 0; i < threads; i++) */
