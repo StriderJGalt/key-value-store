@@ -69,7 +69,7 @@ void *myThreadFun(void *vargp)
 				if (temp == 0)
 					continue;		
 				int rem = rand()%temp;
-				slice check1_key,check1_value;
+				Slice check1_key,check1_value;
 				kv.get(rem,&check1_key,&check1_value);
 				bool check2 = kv.del(&check1_key);
 				db_size--;
@@ -132,8 +132,8 @@ int main()
 			string k = random_key(10);
             Slice key,value;
             strcpy(key.data,k.c_str());
-            key.size = k;
-			bool ans = kv.get(&key,value);
+            key.size = 10;
+			bool ans = kv.get(&key,&value);
 			map<string,string>:: iterator itr = db.find(k);
 			if((ans==false && itr != db.end()) || (ans==true && itr == db.end()) )
 				incorrect = true;
@@ -150,7 +150,7 @@ int main()
             strcpy(value.data,value_s.c_str());
             value.size = v;
             db.insert(pair<string,string>(key_s,value_s));
-			bool check1 = kv.get(&key,value);
+			bool check1 = kv.get(&key,&value);
 			bool ans = kv.put(&key,&value);
 			bool check2 = kv.get(&key,&value);
 			db_size++;
@@ -164,10 +164,8 @@ int main()
 			map<string,string>:: iterator itr = db.begin();
             Slice key,value;
 			for(int i=0;i<rem;i++)itr++;
-            {
-                strcpy(key.data,itr->first);
-                key.size = key.length();
-            }
+            strcpy(key.data,itr->first.c_str());
+            key.size = itr->first.length();
 			bool check = kv.del(&key);
 			db_size--;
 			db.erase(itr);
