@@ -3,7 +3,6 @@
 #include <pthread.h>
 #include <time.h>
 #include "kvStore.cpp"
-using namespace std;
 
 string random_key(int stringLength){
 	string key = "";
@@ -130,7 +129,10 @@ int main()
 		if(x==0)
 		{
 			string k = random_key(10);
-			bool ans = kv.get(k);
+            Slice key;
+            strcpy(key.data,k.c_str());
+            key.size = k;
+			bool ans = kv.get(key);
 			map<string,string>:: iterator itr = db.find(k);
 			if((ans==false && itr != db.end()) || (ans==true && itr == db.end()) )
 				incorrect = true;
@@ -139,11 +141,16 @@ int main()
 		{
 			int k = rand()%64 + 1;
 			int v = rand()%256 + 1;
-			string key = random_key(k);
-			string value = random_value(v);
-			db.insert(pair<string,string>(key,value));
+			string key_s = random_key(k);
+			string value_s = random_value(v);
+            Slice key,value;
+            strcpy(key.data,key_s.c_str());
+            key.size = k;
+            strcpy(value.data,value_s.c_str());
+            value.size = v;
+            db.insert(pair<string,string>(key_s,value_s));
 			bool check1 = kv.get(key);
-			bool ans = kv.put(key,value);
+			bool ans = kv.put(&key,&value);
 			bool check2 = kv.get(key);
 			db_size++;
 			if(check2 == false || check1 != ans)
@@ -154,8 +161,13 @@ int main()
 			int max_size = db.size();
 			int rem = rand()%max_size;
 			map<string,string>:: iterator itr = db.begin();
+            Slice key;
 			for(int i=0;i<rem;i++)itr++;
-			string key = itr->first;
+            {
+                string key = itr->first;
+                strcpy(key.data,k.c_str());
+                key.size = k;
+            }
 			bool check = kv.del(key);
 			db_size--;
 			db.erase(itr);
@@ -167,10 +179,11 @@ int main()
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
-			pair <string,string> check = kv.get(rem);
+            Slice key,value;
+			pair <string,string> check = kv.get(rem,&key,&value);
 			map<string,string>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
-			if(check.first != itr->first || check.second != itr->second)
+			if(key->data != itr->first || value->data != itr->second)
 				incorrect = true;
 		}
 		else if(x==4)
@@ -179,7 +192,10 @@ int main()
 			int rem = rand()%max_size;
 			map<string,string>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
-			string key = itr->first;
+			string key_s = itr->first;
+            Slice key;
+            strcpy(key.data,key_s.c_str());
+            key.size = key_s.len();
 			bool check = kv.del(rem);
 			db.erase(itr);
 			db_size--;
@@ -190,7 +206,7 @@ int main()
 	}
 	if(incorrect == true)
 	{
-		cout<<0<<endl;
+        std::cout<<0<<endl;
 		return 0;
 	}
 	int threads = 4;

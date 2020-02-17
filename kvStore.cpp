@@ -1,5 +1,4 @@
 #include<bits/stdc++.h>
-using namespace std;
 enum Color {RED, BLACK, DOUBLE_BLACK};
 
 struct Slice{
@@ -559,21 +558,34 @@ class kvstore{
         int curr = 0;
         while(p->lsize + curr + 1 != N)
         {
-            if(curr + p->lsize + 1> N && p->left != NULL)
-                p = p->left;
-            else if(curr + p->lsize + 1< N && p->right != NULL)
+
+            if(curr + p->lsize + 1> N)
             {
-                curr+=p->lsize + 1;
-                p = p->right;
+                if(p->left != NULL)
+                    p = p->left;
+                else
+                {
+                    std::cout<<"Left is NULL"<<endl;
+                    break;
+                }
             }
+            else if(curr + p->lsize + 1< N)
+            {
+                if(p->right != NULL)
+                {
+                    curr+=p->lsize + 1;
+                    p=p->right;
+                }
+                else{
+                    std::cout<<"Right is NULL"<<endl;
+                    break;
+                }
+            }
+            // printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
+            // std::cout<<p->left<<" "<<p->right<<endl;
         }
+        del(p->key);
         return true; //not sure
     }
 
 };
-
-int main()
-{
-    cout<<"hello";
-    return 0;
-}
