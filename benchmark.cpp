@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <time.h>
 #include "kvStore.cpp"
+using namespace std;
 
 string random_key(int stringLength){
 	string key = "";
@@ -129,10 +130,10 @@ int main()
 		if(x==0)
 		{
 			string k = random_key(10);
-            Slice key;
+            Slice key,value;
             strcpy(key.data,k.c_str());
             key.size = k;
-			bool ans = kv.get(key);
+			bool ans = kv.get(&key,value);
 			map<string,string>:: iterator itr = db.find(k);
 			if((ans==false && itr != db.end()) || (ans==true && itr == db.end()) )
 				incorrect = true;
@@ -149,9 +150,9 @@ int main()
             strcpy(value.data,value_s.c_str());
             value.size = v;
             db.insert(pair<string,string>(key_s,value_s));
-			bool check1 = kv.get(key);
+			bool check1 = kv.get(&key,value);
 			bool ans = kv.put(&key,&value);
-			bool check2 = kv.get(key);
+			bool check2 = kv.get(&key,&value);
 			db_size++;
 			if(check2 == false || check1 != ans)
 				incorrect = true;
@@ -161,7 +162,7 @@ int main()
 			int max_size = db.size();
 			int rem = rand()%max_size;
 			map<string,string>:: iterator itr = db.begin();
-            Slice key;
+            Slice key,value;
 			for(int i=0;i<rem;i++)itr++;
             {
                 string key = itr->first;
@@ -171,7 +172,7 @@ int main()
 			bool check = kv.del(key);
 			db_size--;
 			db.erase(itr);
-			bool check2 = kv.get(key);
+			bool check2 = kv.get(&key,&value);
 			if(check2 == true)
 				incorrect = true;
 		}
@@ -183,7 +184,7 @@ int main()
 			pair <string,string> check = kv.get(rem,&key,&value);
 			map<string,string>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
-			if(key->data != itr->first || value->data != itr->second)
+			if(strcmp(key->data,itr->first.c_str())!=0|| strcmp(value->data,itr->second.c_str())!=0)
 				incorrect = true;
 		}
 		else if(x==4)
@@ -193,13 +194,13 @@ int main()
 			map<string,string>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
 			string key_s = itr->first;
-            Slice key;
+            Slice key,value;
             strcpy(key.data,key_s.c_str());
-            key.size = key_s.len();
+            key.size = key_s.length();
 			bool check = kv.del(rem);
 			db.erase(itr);
 			db_size--;
-			bool check2 = kv.get(key);
+			bool check2 = kv.get(&key,&value);
 			if(check2 == true)
 				incorrect = true;
 		}
