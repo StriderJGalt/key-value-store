@@ -169,7 +169,7 @@ int main()
                 strcpy(key.data,k.c_str());
                 key.size = k;
             }
-			bool check = kv.del(key);
+			bool check = kv.del(&key);
 			db_size--;
 			db.erase(itr);
 			bool check2 = kv.get(&key,&value);
@@ -181,10 +181,11 @@ int main()
 			int max_size = db.size();
 			int rem = rand()%max_size;
             Slice key,value;
-			pair <string,string> check = kv.get(rem,&key,&value);
+            kv.get(rem,&key,&value);
+			pair <string,string> check = make_pair(key.data,value.data);
 			map<string,string>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
-			if(strcmp(key->data,itr->first.c_str())!=0|| strcmp(value->data,itr->second.c_str())!=0)
+			if(strcmp(key.data,itr->first.c_str())!=0|| strcmp(value.data,itr->second.c_str())!=0)
 				incorrect = true;
 		}
 		else if(x==4)
