@@ -120,7 +120,7 @@ int main()
 
 	bool incorrect = false;
 
-	for(int i=0;i<201;i++)
+	for(int i=0;i<20000;i++)
 	{
 		int x = rand()%5;
 		// int x = 3;
