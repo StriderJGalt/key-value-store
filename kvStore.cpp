@@ -501,23 +501,12 @@ class kvstore{
         int curr = 0;
         while(p->lsize + curr + 1 != N)
         {
-<<<<<<< HEAD
-=======
-
->>>>>>> a30b486f4441d613a00cb78cae8806bb1d5d8d69
             if(curr + p->lsize + 1> N)
             {
                 if(p->left != NULL)
                     p = p->left;
                 else
-<<<<<<< HEAD
                     break;
-=======
-                {
-                    std::cout<<"Left is NULL"<<endl;
-                    break;
-                }
->>>>>>> a30b486f4441d613a00cb78cae8806bb1d5d8d69
             }
             else if(curr + p->lsize + 1< N)
             {
@@ -526,21 +515,10 @@ class kvstore{
                     curr+=p->lsize + 1;
                     p=p->right;
                 }
-<<<<<<< HEAD
                 else
                   break;
             }
       }
-=======
-                else{
-                    std::cout<<"Right is NULL"<<endl;
-                    break;
-                }
-            }
-            // printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
-            // std::cout<<p->left<<" "<<p->right<<endl;
-        }
->>>>>>> a30b486f4441d613a00cb78cae8806bb1d5d8d69
         del(p->key);
         return true; //not sure
   }
