@@ -120,9 +120,9 @@ int main()
 
 	bool incorrect = false;
 
-	for(int i=0;i<40;i++)
+	for(int i=0;i<10000;i++)
 	{
-		int x = rand()%4;
+		int x = rand()%5;
 		// int x = 3;
 		if(x==0)
 		{
@@ -146,7 +146,7 @@ int main()
 			if(check2 == false || check1 != ans)
 				incorrect = true;
 		}
-		else if(x==9 && db.size() > 0)
+		else if(x==2 && db.size() > 0)
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
@@ -172,8 +172,8 @@ int main()
 			if(check.first != itr->first || check.second != itr->second)
       {
           incorrect = true;
+					std::cout<<check.first<<" "<<" "<<itr->first<<" "<<endl;
       }
-			std::cout<<check.first<<" "<<" "<<itr->first<<" "<<endl;
     }
 		else if(x==4 && db.size() > 0)
 		{

@@ -110,7 +110,7 @@ int main()
 
 	for(int i=0;i<100000;i++)
 	{
-		int x = rand()%5;
+		int x = rand()%3;
 		if(x==0)
 		{
 			string k = random_key(10);
