@@ -285,6 +285,77 @@ class kvstore{
             setColor(root, BLACK);
         }
     }
+    void delfix(node *p)
+    {
+        node *s;
+        while(p!=root&&p->color=='b')
+        {
+              if(p->parent->left==p)
+              {
+                      s=p->parent->right;
+                      if(s->color=='r')
+                      {
+                             s->color='b';
+                             p->parent->color='r';
+                             leftrotate(p->parent);
+                             s=p->parent->right;
+                      }
+                      if(s->right->color=='b'&&s->left->color=='b')
+                      {
+                             s->color='r';
+                             p=p->parent;
+                      }
+                      else
+                      {
+                          if(s->right->color=='b')
+                          {
+                                 s->left->color=='b';
+                                 s->color='r';
+                                 rightrotate(s);
+                                 s=p->parent->right;
+                          }
+                          s->color=p->parent->color;
+                          p->parent->color='b';
+                          s->right->color='b';
+                          leftrotate(p->parent);
+                          p=root;
+                      }
+              }
+              else
+              {
+                      s=p->parent->left;
+                      if(s->color=='r')
+                      {
+                            s->color='b';
+                            p->parent->color='r';
+                            rightrotate(p->parent);
+                            s=p->parent->left;
+                      }
+                      if(s->left->color=='b'&&s->right->color=='b')
+                      {
+                            s->color='r';
+                            p=p->parent;
+                      }
+                      else
+                      {
+                            if(s && s->left && s->left->color=='b')
+                            {
+                                  s->right->color='b';
+                                  s->color='r';
+                                  leftrotate(s);
+                                  s=p->parent->left;
+                            }
+                            s->color=p->parent->color;
+                            p->parent->color='b';
+                            s->left->color='b';
+                            rightrotate(p->parent);
+                            p=root;
+                      }
+              }
+           p->color='b';
+        }
+    }
+
 
 
     void disp()
@@ -400,74 +471,74 @@ class kvstore{
     }
 
     bool del(string key){
-        node *node = deleteBST(root, key);
-            fixDeleteRBTree(node);
-        // if(root==NULL)
-        // return false;
-        // node *p;
-        // p=root;
-        // node *y=NULL;
-        // node *q=NULL;
-        // int found=0;
-        // while(p!=NULL&&found==0)
-        // {
-        //     if(!p->key->data.compare(key))
-        //         found=1;
-        //     if(found==0)
-        //     {
-        //         if(p->key->data.compare(key)<0)
-        //             p=p->right;
-        //         else
-        //             p=p->left;
-        //     }
-        // }
-        // if(found==0)
-        // {
-        //     return false;
-        // }
-        // else
-        // {
-        //     node *par=p;
-        //     while(par!=root)
-        //     {
-        //         if(par->parent->left == par)
-        //             par->parent->lsize--;
-        //         else
-        //             par->parent->rsize--;
-        //         par = par->parent;
-        //     }
-        //     if(p->left==NULL||p->right==NULL)
-        //         y=p;
-        //     else
-        //         y=successor(p);
-        //     if(y->left!=NULL)
-        //         q=y->left;
-        //     else
-        //     {
-        //         if(y->right!=NULL)
-        //             q=y->right;
-        //         else
-        //             q=NULL;
-        //     }
-        //     if(q!=NULL)
-        //         q->parent=y->parent;
-        //     if(y->parent==NULL)
-        //         root=q;
-        //     else
-        //     {
-        //         if(y==y->parent->left)
-        //             y->parent->left=q;
-        //         else
-        //             y->parent->right=q;
-        //     }
-        //     if(y!=p)
-        //     {
-        //         p->color=y->color;
-        //         p->key->data=y->key->data;
-        //         p->value->data=y->value->data;
-        //     }
-        //     if(y->color=='b')
-        //     delfix(q);
+        // node *node = deleteBST(root, key);
+        //     fixDeleteRBTree(node);
+        if(root==NULL)
+        return false;
+        node *p;
+        p=root;
+        node *y=NULL;
+        node *q=NULL;
+        int found=0;
+        while(p!=NULL&&found==0)
+        {
+            if(!p->key->data.compare(key))
+                found=1;
+            if(found==0)
+            {
+                if(p->key->data.compare(key)<0)
+                    p=p->right;
+                else
+                    p=p->left;
+            }
+        }
+        if(found==0)
+        {
+            return false;
+        }
+        else
+        {
+            node *par=p;
+            while(par!=root)
+            {
+                if(par->parent->left == par)
+                    par->parent->lsize--;
+                else
+                    par->parent->rsize--;
+                par = par->parent;
+            }
+            if(p->left==NULL||p->right==NULL)
+                y=p;
+            else
+                y=successor(p);
+            if(y->left!=NULL)
+                q=y->left;
+            else
+            {
+                if(y->right!=NULL)
+                    q=y->right;
+                else
+                    q=NULL;
+            }
+            if(q!=NULL)
+                q->parent=y->parent;
+            if(y->parent==NULL)
+                root=q;
+            else
+            {
+                if(y==y->parent->left)
+                    y->parent->left=q;
+                else
+                    y->parent->right=q;
+            }
+            if(y!=p)
+            {
+                p->color=y->color;
+                p->key->data=y->key->data;
+                p->value->data=y->value->data;
+            }
+            if(y->color=='b')
+            delfix(q);
         // }
         return false;
     }

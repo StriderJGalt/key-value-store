@@ -105,24 +105,24 @@ int main()
 /*     kv.put("gde","Val 8"); */
 /*     kv.put("hde","Val 9"); */
 /*     std::cout<<kv.get(9).second<<endl; */
-	for(int i=0;i<11;i++)
+	for(int i=0;i<100000;i++)
 	{
-		int k = rand()%4 + 1;
+		int k = rand()%64 + 1;
 		int v = rand()%256 + 1;
 		string key = random_key(k);
 		string value = random_value(v);
 		db.insert(pair<string,string>(key,value));
 		kv.put(key,value);
 		db_size++;
-		kv.disp();
-		printf("\n\nNew thing\n\n");
+		// kv.disp();
+		// printf("\n\nNew thing\n\n");
 	}
 
 	bool incorrect = false;
 
-	for(int i=0;i<20;i++)
+	for(int i=0;i<40;i++)
 	{
-		int x = rand()%3;
+		int x = rand()%4;
 		// int x = 3;
 		if(x==0)
 		{
@@ -146,7 +146,7 @@ int main()
 			if(check2 == false || check1 != ans)
 				incorrect = true;
 		}
-		else if(x==2 && db.size() > 0)
+		else if(x==9 && db.size() > 0)
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
@@ -172,8 +172,8 @@ int main()
 			if(check.first != itr->first || check.second != itr->second)
       {
           incorrect = true;
-					std::cout<<check.first<<" "<<" "<<itr->first<<" "<<endl;
       }
+			std::cout<<check.first<<" "<<" "<<itr->first<<" "<<endl;
     }
 		else if(x==4 && db.size() > 0)
 		{

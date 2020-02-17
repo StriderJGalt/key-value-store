@@ -128,26 +128,26 @@ class kvstore{
     void delfix(node *p)
     {
         node *s;
-        while(p&&p!=root&&p->color=='b')
+        while(p!=root&&p->color=='b')
         {
               if(p->parent->left==p)
               {
                       s=p->parent->right;
-                      if(s&&s->color=='r')
+                      if(s->color=='r')
                       {
                              s->color='b';
                              p->parent->color='r';
                              leftrotate(p->parent);
                              s=p->parent->right;
                       }
-                      if(s && s->right && s->left && s->right->color=='b'&&s->left->color=='b')
+                      if(s->right->color=='b'&&s->left->color=='b')
                       {
                              s->color='r';
                              p=p->parent;
                       }
                       else
                       {
-                          if(s && s->right &&s->right->color=='b')
+                          if(s->right->color=='b')
                           {
                                  s->left->color=='b';
                                  s->color='r';
@@ -161,22 +161,22 @@ class kvstore{
                           p=root;
                       }
               }
-              else if(p->parent->right==p)
+              else
               {
                       s=p->parent->left;
-                      if(s && s->color=='r')
+                      if(s->color=='r')
                       {
                             s->color='b';
                             p->parent->color='r';
                             rightrotate(p->parent);
                             s=p->parent->left;
                       }
-                      if(s && s->right && s->left && s->left->color=='b'&&s->right->color=='b')
+                      if(s->left->color=='b'&&s->right->color=='b')
                       {
                             s->color='r';
                             p=p->parent;
                       }
-                      else if ( s && s->left )
+                      else
                       {
                             if(s && s->left && s->left->color=='b')
                             {
@@ -193,7 +193,6 @@ class kvstore{
                       }
               }
            p->color='b';
-           root->color='b';
         }
     }
 
