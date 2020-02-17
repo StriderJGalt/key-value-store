@@ -35,152 +35,152 @@ class kvstore{
     public:
     void leftrotate(node *p)
     {
-         if(p->right==NULL)
-               return ;
-         else
-         {
-               node *y=p->right;
-               p->rsize-=(y->lsize + y->rsize);
-               if(y->left!=NULL)
-               {
-                      p->right=y->left;
-                      p->rsize+=p->right->lsize + p->right->rsize;
-                      y->lsize-=p->right->lsize + p->right->rsize;
-                      y->left->parent=p;
-               }
-               else
-                      p->right=NULL;
-               if(p->parent!=NULL)
-                    y->parent=p->parent;
-               if(p->parent==NULL)
-                    root=y;
-               else
-               {
-                   if(p==p->parent->left)
-                           p->parent->left=y;
-                   else
-                           p->parent->right=y;
-               }
-               y->left=p;
-               y->lsize+=p->lsize + p->rsize;
-               p->parent=y;
-         }
+        if(p->right==NULL)
+            return ;
+        else
+        {
+            node *y=p->right;
+            p->rsize-=(y->lsize + y->rsize);
+            if(y->left!=NULL)
+            {
+                p->right=y->left;
+                p->rsize+=p->right->lsize + p->right->rsize;
+                y->lsize-=p->right->lsize + p->right->rsize;
+                y->left->parent=p;
+            }
+            else
+                p->right=NULL;
+            if(p->parent!=NULL)
+                y->parent=p->parent;
+            if(p->parent==NULL)
+                root=y;
+            else
+            {
+                if(p==p->parent->left)
+                    p->parent->left=y;
+                else
+                    p->parent->right=y;
+            }
+            y->left=p;
+            y->lsize+=p->lsize + p->rsize;
+            p->parent=y;
+        }
     }
     node* successor(node *p)
     {
-         node *y=NULL;
-         if(p->left!=NULL)
-         {
-             y=p->left;
-             while(y->right!=NULL)
-                  y=y->right;
-         }
-         else
-         {
-             y=p->right;
-             while(y->left!=NULL)
-                  y=y->left;
-         }
-         return y;
+        node *y=NULL;
+        if(p->left!=NULL)
+        {
+            y=p->left;
+            while(y->right!=NULL)
+                y=y->right;
+        }
+        else
+        {
+            y=p->right;
+            while(y->left!=NULL)
+                y=y->left;
+        }
+        return y;
     }
 
     void rightrotate(node *p)
     {
-         if(p->left==NULL)
-              return ;
-         else
-         {
-             node *y=p->left;
-             p->lsize-=(p->left->lsize+p->left->rsize);
-             if(y->right!=NULL)
-             {
-                      p->left=y->right;
-                      p->lsize+=(p->left->lsize+p->left->rsize);
-                      y->rsize-=(p->left->lsize+p->left->rsize);
-                      y->right->parent=p;
-             }
-             else
-                     p->left=NULL;
-             if(p->parent!=NULL)
-                     y->parent=p->parent;
-             if(p->parent==NULL)
-                   root=y;
-             else
-             {
-                 if(p==p->parent->left)
-                       p->parent->left=y;
-                 else
-                       p->parent->right=y;
-             }
-             y->right=p;
-             y->rsize+=(p->lsize+p->rsize);
-             p->parent=y;
-         }
+        if(p->left==NULL)
+            return ;
+        else
+        {
+            node *y=p->left;
+            p->lsize-=(p->left->lsize+p->left->rsize);
+            if(y->right!=NULL)
+            {
+                p->left=y->right;
+                p->lsize+=(p->left->lsize+p->left->rsize);
+                y->rsize-=(p->left->lsize+p->left->rsize);
+                y->right->parent=p;
+            }
+            else
+                p->left=NULL;
+            if(p->parent!=NULL)
+                y->parent=p->parent;
+            if(p->parent==NULL)
+                root=y;
+            else
+            {
+                if(p==p->parent->left)
+                    p->parent->left=y;
+                else
+                    p->parent->right=y;
+            }
+            y->right=p;
+            y->rsize+=(p->lsize+p->rsize);
+            p->parent=y;
+        }
     }
 
-	void insertfix(node *t)
-	{
-		node *u;
-		if(root == t)
-		{
-			t->color = 'b';
-			return ;
-		}
-		while(t->parent && t->parent->color == 'r')
-		{
-			node *g = t->parent->parent;
-			if(g->left == t->parent)
-			{
-				if(g->right)
-				{
-					u = g->right;
-					if(u->color == 'r')
-					{
-						t->parent->color = 'b';
-						u->color = 'b';
-						g->color='r';
-						t=g;
-					}
-				}
-				else{
-					if(t->parent->right == t)
-					{
-						t = t->parent;
-						leftrotate(t);
-					}
-					t->parent->color = 'b';
-					g->color = 'r';
-					rightrotate(g);
-				}
-			}
-			else{
-				if(g->left)
-				{
-					u=g->left;
-					if(u->color == 'r')
-					{
-						t->parent->color = 'b';
-						u->color='b';
-						g->color='r';
-						t=g;
-					}
-				}
-				else
-				{
-					if(t->parent->left == t)
-					{
-						t = t->parent;
-						rightrotate(t);
-					}
-					t->parent->color = 'b';
-					g->color = 'r';
-					leftrotate(g);
-				}
-			}
-			root->color = 'b';
-			return ;
-		}
-	}
+    void insertfix(node *t)
+    {
+        node *u;
+        if(root == t)
+        {
+            t->color = 'b';
+            return ;
+        }
+        while(t->parent && t->parent->color == 'r')
+        {
+            node *g = t->parent->parent;
+            if(g->left == t->parent)
+            {
+                if(g->right)
+                {
+                    u = g->right;
+                    if(u->color == 'r')
+                    {
+                        t->parent->color = 'b';
+                        u->color = 'b';
+                        g->color='r';
+                        t=g;
+                    }
+                }
+                else{
+                    if(t->parent->right == t)
+                    {
+                        t = t->parent;
+                        leftrotate(t);
+                    }
+                    t->parent->color = 'b';
+                    g->color = 'r';
+                    rightrotate(g);
+                }
+            }
+            else{
+                if(g->left)
+                {
+                    u=g->left;
+                    if(u->color == 'r')
+                    {
+                        t->parent->color = 'b';
+                        u->color='b';
+                        g->color='r';
+                        t=g;
+                    }
+                }
+                else
+                {
+                    if(t->parent->left == t)
+                    {
+                        t = t->parent;
+                        rightrotate(t);
+                    }
+                    t->parent->color = 'b';
+                    g->color = 'r';
+                    leftrotate(g);
+                }
+            }
+            root->color = 'b';
+            return ;
+        }
+    }
 
     void delfix(node *p)
     {
@@ -255,56 +255,56 @@ class kvstore{
     }
 
     bool put(string key, string value)
-	{
-		//Your Code Here
-		node *p, *q;
-		node *t = new node;
+    {
+        //Your Code Here
+        register node *p, *q;
+        register node *t = new node;
 
-		t->key->data = key;
-		t->key->size = key.length();
-		t->value->data = value;
-		t->value->size = value.length();
-		t->left = NULL;
-		t->right = NULL;
-		t->color = 'r';
-		
+        t->key->data = key;
+        t->key->size = key.length();
+        t->value->data = value;
+        t->value->size = value.length();
+        t->left = NULL;
+        t->right = NULL;
+        t->color = 'r';
 
-		if(!root)
-		{
-			root = t;
-			t->parent = NULL;
-		}
-		else{
-			p = root;
-			q = NULL;
-			while(p)
-			{
-				q = p;
-				if(!p->key->data.compare(t->key->data))
-				{
-					p->value->data = t->value->data;
-					return true;
-				}
-				else if(p->key->data.compare(t->key->data)<0)
+
+        if(!root)
+        {
+            root = t;
+            t->parent = NULL;
+        }
+        else{
+            p = root;
+            q = NULL;
+            while(p)
+            {
+                q = p;
+                if(!p->key->data.compare(t->key->data))
+                {
+                    p->value->data = t->value->data;
+                    return true;
+                }
+                else if(p->key->data.compare(t->key->data)<0)
                 {
                     p->rsize++;
-					p = p->right;
+                    p = p->right;
                 }
                 else
                 {
                     p->lsize++;
-					p = p->left;
-			    }
+                    p = p->left;
+                }
             }
-			t->parent = q;
-			if(q->key->data.compare(t->key->data)<0)
-				q->right = t;
-			else
-				q->left = t;
-		}
-		insertfix(t);
+            t->parent = q;
+            if(q->key->data.compare(t->key->data)<0)
+                q->right = t;
+            else
+                q->left = t;
+        }
+        insertfix(t);
         return false;
-	}
+    }
 
     bool del(string key){
         node *p;
@@ -330,15 +330,15 @@ class kvstore{
         }
         else
         {
-          node *par=p;
-          while(par!=root)
-          {
-            if(par->parent->left == par)
-            par->parent->lsize--;
-            else
-            par->parent->rsize--;
-            par = par->parent;
-          }
+            node *par=p;
+            while(par!=root)
+            {
+                if(par->parent->left == par)
+                    par->parent->lsize--;
+                else
+                    par->parent->rsize--;
+                par = par->parent;
+            }
             if(p->left==NULL||p->right==NULL)
                 y=p;
             else
@@ -369,7 +369,7 @@ class kvstore{
                 p->key->data=y->key->data;
             }
             // if(y->color=='b')
-                // delfix(q);
+            // delfix(q);
         }
         return false;
     }
@@ -393,18 +393,62 @@ class kvstore{
             }
         }
         if(found == 0)
-        return false;
+            return false;
         return true;
     }
 
     pair<string,string> get(int N){
-        // Your Code Here
-        pair<string,string> temp = make_pair("key","value");
-        return temp;
+        node *p;
+        p=root;
+        if(p->lsize+p->rsize < N)
+            return make_pair("None","None");
+        int curr = 0;
+        while(p->lsize + curr + 1 != N)
+        {
+            if(curr + p->lsize + 1> N)
+            {
+                if(p->left != NULL)
+                p = p->left;
+                else
+                {
+                    std::cout<<"Left is NULL"<<endl;
+                    break;
+                }
+            }
+            else if(curr + p->lsize + 1< N)
+            {
+                if(p->right != NULL)
+                {
+                curr+=p->lsize + 1;
+                p=p->right;
+                }
+                else{
+                    std::cout<<"Right is NULL"<<endl;
+                    break;
+                }
+            }
+            printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
+            std::cout<<p->left<<" "<<p->right<<endl;
+       }
+        return make_pair(p->key->data,p->value->data);           
     }
 
     bool del(int N){
-        // Your Code Here
-        return true;
+        node *p;
+        p=root;
+        if(p->lsize+p->rsize + 1 < N)
+            return false;
+        int curr = 0;
+        while(p->lsize + curr + 1 != N)
+        {
+            if(curr + p->lsize + 1> N && p->left != NULL)
+                p = p->left;
+            else if(curr + p->lsize + 1< N && p->right != NULL)
+            {
+                curr+=p->lsize + 1;
+                p = p->right;
+            }
+        }
+        return del(p->key->data);
     }
 };

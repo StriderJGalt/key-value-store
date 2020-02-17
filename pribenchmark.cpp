@@ -44,7 +44,7 @@ void *myThreadFun(void *vargp)
 		for(int i=0;i<10000;i++)
 		{
 			transactions+=1;
-			int x = rand()%5;
+			int x = rand()%4;
 			if(x==0)
 			{
 				string k = random_key(10);
@@ -95,7 +95,17 @@ void *myThreadFun(void *vargp)
 
 int main()
 {
-	for(int i=0;i<10000000;i++)
+/*     kv.put("abc","Val 2"); */
+/*     kv.put("bcd","Val 3"); */
+/*     kv.put("aab","Val 1"); */
+/*     kv.put("cde","Val 4"); */
+/*     kv.put("dab","Val 5"); */
+/*     kv.put("ede","Val 6"); */
+/*     kv.put("fde","Val 7"); */
+/*     kv.put("gde","Val 8"); */
+/*     kv.put("hde","Val 9"); */
+/*     std::cout<<kv.get(9).second<<endl; */
+	for(int i=0;i<100;i++)
 	{
 		int k = rand()%64 + 1;
 		int v = rand()%256 + 1;
@@ -110,7 +120,7 @@ int main()
 
 	for(int i=0;i<10;i++)
 	{
-		int x = rand()%3;
+		int x = rand()%4;
 		if(x==0)
 		{
 			string k = random_key(10);
@@ -155,8 +165,11 @@ int main()
 			map<string,string>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
 			if(check.first != itr->first || check.second != itr->second)
-				incorrect = true;
-		}
+            {
+                incorrect = true;
+		        std::cout<<check.first<<" "<<" "<<itr->first<<" "<<endl;
+            }
+        }
 		else if(x==4)
 		{
 			int max_size = db.size();
@@ -179,13 +192,14 @@ int main()
 	}
 	int threads = 4;
 
-	pthread_t tid[threads];
-	for (int i = 0; i < threads; i++) 
-	{
-		tid[i] = i;
-        pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); 
-	}
-	for(int i=0;i<threads;i++)
-		pthread_join(tid[i],NULL);
-	return 0;
+	/* pthread_t tid[threads]; */
+	/* for (int i = 0; i < threads; i++) */ 
+	/* { */
+	/* 	tid[i] = i; */
+        /* pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); */ 
+	/* } */
+	/* for(int i=0;i<threads;i++) */
+	/* 	pthread_join(tid[i],NULL); */
+    
+    return 0;
 }

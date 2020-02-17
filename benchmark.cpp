@@ -95,7 +95,7 @@ void *myThreadFun(void *vargp)
 
 int main()
 {
-	for(int i=0;i<100000;i++)
+	for(int i=0;i<10;i++)
 	{
 		int k = rand()%64 + 1;
 		int v = rand()%256 + 1;
@@ -108,7 +108,7 @@ int main()
 
 	bool incorrect = false;
 
-	for(int i=0;i<10000;i++)
+	for(int i=0;i<10;i++)
 	{
 		int x = rand()%5;
 		if(x==0)
