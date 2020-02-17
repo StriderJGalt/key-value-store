@@ -47,16 +47,20 @@ void *myThreadFun(void *vargp)
 			int x = rand()%5;
 			if(x==0)
 			{
-				string k = random_key(10);
-				bool ans = kv.get(k);
+				Slice key,value;
+				strcpy(key.data,random_key(10).c_str());
+				bool ans = kv.get(&key,&value);
 			}
 			else if(x==1)
 			{
 				int k = rand()%64 + 1;
 				int v = rand()%256 + 1;
-				string key = random_key(k);
-				string value = random_value(v);
-				bool ans = kv.put(key,value);
+				Slice key,value;
+				strcpy(key.data,random_key(k).c_str());
+				key.size = k;
+				strcpy(value.data,random_value(v).c_str());
+				value.size = v;
+				bool ans = kv.put(&key,&value);
 				db_size++;
 			}
 			else if(x==2)
@@ -65,8 +69,9 @@ void *myThreadFun(void *vargp)
 				if (temp == 0)
 					continue;		
 				int rem = rand()%temp;
-				pair <string,string> check = kv.get(rem);
-				bool check2 = kv.del(check.first);
+				slice check1_key,check1_value;
+				kv.get(rem,&check1_key,&check1_value);
+				bool check2 = kv.del(&check1_key);
 				db_size--;
 			}
 			else if(x==3)
@@ -75,7 +80,8 @@ void *myThreadFun(void *vargp)
 				if (temp == 0)
 					continue;
 				int rem = rand()%temp;
-				pair <string,string> check = kv.get(rem);
+				Slice check_key,check_value;
+				bool check = kv.get(rem,&check_key,&check_value);
 			}
 			else if(x==4)
 			{
@@ -99,16 +105,24 @@ int main()
 	{
 		int k = rand()%64 + 1;
 		int v = rand()%256 + 1;
-		string key = random_key(k);
-		string value = random_value(v);
-		db.insert(pair<string,string>(key,value));
-		kv.put(key,value);
+		string key_s = random_key(k);
+		string value_s = random_value(v);
+		Slice key,value;
+		strcpy(key.data,key_s.c_str());
+		key.size = k;
+		strcpy(value.data,value_s.c_str());
+		value.size = v;
+		db.insert(pair<string,string>(key_s,value_s));
+		kv.put(&key,&value);
 		db_size++;
         /* std::cout<<"i:"<<i<<endl; */
 	}
 
 	bool incorrect = false;
 
+	// -------------------------------------------------------------------------------------- 
+	// start correcting from here downwards
+	// ----------------------------------------------------------------------------------------
 	for(int k=0;k<1;k++)
 	{
         std::cout<<"k:"<<k<<endl;

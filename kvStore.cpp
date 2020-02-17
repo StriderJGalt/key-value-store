@@ -4,7 +4,7 @@ enum Color {RED, BLACK, DOUBLE_BLACK};
 
 struct Slice{
     uint8_t size;
-    string data;
+    char *data;
 };
 class node
 {
@@ -21,10 +21,10 @@ class node
         node(){
             key = new Slice;
             value = new Slice;
-            key->size = 63;
-            /* key->data = (char *)malloc(sizeof(char)*(key->size)); */
+            key->size = 65;
+            key->data = (char *)malloc(sizeof(char)*(65)); 
             value->size = 255;
-            /* value->data = (char *)malloc(sizeof(char)*(value->size)); */
+            value->data = (char *)malloc(sizeof(char)*(257));
             lsize = 0;
             rsize = 0;
         }
@@ -173,15 +173,15 @@ class kvstore{
         setColor(root, BLACK);
     }
 
-    node* deleteBST(node *&root,  string data)
+    node* deleteBST(node *&root,  char *data)
     {
         if (root == nullptr)
             return root;
 
-        if (data.compare(root->key->data) < 0)
+        if (strcmp(root->key->data,data) < 0)
             return deleteBST(root->left, data);
 
-        if (data.compare(root->key->data) > 0)
+        if (strcmp(root->key->data,data) > 0)
             return deleteBST(root->right, data);
 
         if (root->left == nullptr || root->right == nullptr)
@@ -300,69 +300,69 @@ class kvstore{
     }
 
 
-    void disp()
-    {
-        display(root);
-    }
-    void display(node *p)
-    {
-        if(root==NULL)
-        {
-            cout<<"\nEmpty Tree.";
-            return ;
-        }
-        if(p!=NULL)
-        {
-            cout<<"\n\t NODE: ";
-            cout<<"\n Key: "<<p->key->data;
-            cout<<"\n lsize: "<<p->lsize;
-            cout<<"\n rsize: "<<p->rsize;
-            cout<<"\n Colour: ";
-            if(p->color==BLACK)
-                cout<<"Black";
-            else
-                cout<<"Red";
-            if(p->parent!=NULL)
-                cout<<"\n Parent: "<<p->parent->key->data;
-            else
-                cout<<"\n There is no parent of the node.  ";
-            if(p->right!=NULL)
-                cout<<"\n Right Child: "<<p->right->key->data;
-            else
-                cout<<"\n There is no right child of the node.  ";
-            if(p->left!=NULL)
-                cout<<"\n Left Child: "<<p->left->key->data;
-            else
-                cout<<"\n There is no left child of the node.  ";
-            cout<<endl;
-            if(p->left)
-            {
-                cout<<"\n\nLeft:\n";
-                display(p->left);
-            }
-            if(p->right)
-            {
-                cout<<"\n\nRight:\n";
-                display(p->right);
-            }
-            /*else
-              cout<<"\nNo Right Child.\n"*/
-        }
-    }
+    // void disp()
+    // {
+    //     display(root);
+    // }
+    // void display(node *p)
+    // {
+    //     if(root==NULL)
+    //     {
+    //         cout<<"\nEmpty Tree.";
+    //         return ;
+    //     }
+    //     if(p!=NULL)
+    //     {
+    //         cout<<"\n\t NODE: ";
+    //         cout<<"\n Key: "<<p->key->data;
+    //         cout<<"\n lsize: "<<p->lsize;
+    //         cout<<"\n rsize: "<<p->rsize;
+    //         cout<<"\n Colour: ";
+    //         if(p->color==BLACK)
+    //             cout<<"Black";
+    //         else
+    //             cout<<"Red";
+    //         if(p->parent!=NULL)
+    //             cout<<"\n Parent: "<<p->parent->key->data;
+    //         else
+    //             cout<<"\n There is no parent of the node.  ";
+    //         if(p->right!=NULL)
+    //             cout<<"\n Right Child: "<<p->right->key->data;
+    //         else
+    //             cout<<"\n There is no right child of the node.  ";
+    //         if(p->left!=NULL)
+    //             cout<<"\n Left Child: "<<p->left->key->data;
+    //         else
+    //             cout<<"\n There is no left child of the node.  ";
+    //         cout<<endl;
+    //         if(p->left)
+    //         {
+    //             cout<<"\n\nLeft:\n";
+    //             display(p->left);
+    //         }
+    //         if(p->right)
+    //         {
+    //             cout<<"\n\nRight:\n";
+    //             display(p->right);
+    //         }
+    //         /*else
+    //           cout<<"\nNo Right Child.\n"*/
+    //     }
+    // }
 
 
 
 
-    bool put(string key, string value)
+    bool put(Slice *key, Slice *value)
     {
         //Your Code Here
         register node *p, *q;
         register node *t = new node;
 
-        t->key->data = key;
-        t->key->size = key.length();
-        t->value->data = value;
-        t->value->size = value.length();
+        strcpy(t->key->data,key->data);
+        t->key->size = key->size;
+        strcpy(t->value->data,value->data);
+        t->value->size = value->size;
         t->left = NULL;
         t->right = NULL;
         t->color = 'r';
@@ -377,7 +377,7 @@ class kvstore{
             while(p)
             {
                 q = p;
-                if(!p->key->data.compare(t->key->data))
+                if(!strcmp(p->key->data,t->key->data))
                 {
                     // p->value->data = value;
                     node *par=p;
@@ -391,7 +391,7 @@ class kvstore{
                     }
                     return true;
                 }
-                else if(p->key->data.compare(t->key->data)<0)
+                else if(strcmp(p->key->data,t->key->data)<0)
                 {
                     p->rsize++;
                     p = p->right;
@@ -403,7 +403,7 @@ class kvstore{
                 }
             }
             t->parent = q;
-            if(q->key->data.compare(t->key->data)<0)
+            if(strcmp(q->key->data,t->key->data)<0)
                 q->right = t;
             else
                 q->left = t;
@@ -412,7 +412,7 @@ class kvstore{
         return false;
     }
 
-    bool del(string key){
+    bool del(Slice *key){
 
         // node *node = deleteBST(root, key);
         //     fixDeleteRBTree(node);
@@ -425,11 +425,11 @@ class kvstore{
         int found=0;
         while(p!=NULL&&found==0)
         {
-            if(!p->key->data.compare(key))
+            if(!strcmp(p->key->data,key->data))
                 found=1;
             if(found==0)
             {
-                if(p->key->data.compare(key)<0)
+                if(strcmp(p->key->data,key->data)<0)
                     p=p->right;
                 else
                     p=p->left;
@@ -477,8 +477,8 @@ class kvstore{
             if(y!=p)
             {
                 p->color=y->color;
-                p->key->data=y->key->data;
-                p->value->data=y->value->data;
+                strcpy(p->key->data,y->key->data);
+                strcpy(p->value->data,y->value->data);
             }
             if(y->color=='b')
             delfix(q);
@@ -487,7 +487,7 @@ class kvstore{
         return false;
     }
     //
-    bool get(string key){
+    bool get(Slice *key,Slice *value){
         node *p;
         p=root;
         node *y=NULL;
@@ -495,11 +495,12 @@ class kvstore{
         int found=0;
         while(p!=NULL&&found==0)
         {
-            if(p->key->data.compare(key)==0)
+            if(strcmp(p->key->data,key->data)==0)
                 found=1;
+                strcpy(value->data,p->value->data);
             if(found==0)
             {
-                if(p->key->data.compare(key)<0)
+                if(strcmp(p->key->data,key->data)<0)
                     p=p->right;
                 else
                     p=p->left;
@@ -510,12 +511,12 @@ class kvstore{
         return true;
     }
 
-    pair<string,string> get(int N){
+    bool get(int N, Slice *key, Slice *value){
         N++;
         node *p;
         p=root;
         if(p->lsize+p->rsize + 1< N)
-            return make_pair("None","None");
+            return false;
         int curr = 0;
         while(p->lsize + curr + 1 != N)
         {
@@ -544,7 +545,9 @@ class kvstore{
             // printf("N = %d,curr + lisze = %d ,",N,curr+p->lsize + 1);
             // std::cout<<p->left<<" "<<p->right<<endl;
         }
-        return make_pair(p->key->data,p->value->data);
+        strcpy(key->data,p->key->data);
+        strcpy(value->data,p->value->data);        
+        return true;
     }
 
     bool del(int N){
@@ -564,7 +567,13 @@ class kvstore{
                 p = p->right;
             }
         }
-        return del(p->key->data);
+        return true; //not sure
     }
 
 };
+
+int main()
+{
+    cout<<"hello";
+    return 0;
+}
