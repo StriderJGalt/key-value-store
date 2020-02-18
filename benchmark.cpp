@@ -56,6 +56,7 @@ void *myThreadFun(void *vargp)
 			if(x==0)
 			{
 				Slice key,value;
+				key.data = (char *)malloc(sizeof(char)*64);
 				strcpy(key.data,random_key(10));
 				bool ans = kv.get(&key,&value);
 			}
@@ -78,6 +79,8 @@ void *myThreadFun(void *vargp)
 					continue;
 				int rem = rand()%temp;
 				Slice check1_key,check1_value;
+				check1_key.data = (char *)malloc(sizeof(char)*64);
+				check1_value.data = (char *)malloc(sizeof(char)*257);
 				kv.get(rem,&check1_key,&check1_value);
 				bool check2 = kv.del(&check1_key);
 				db_size--;
@@ -89,6 +92,8 @@ void *myThreadFun(void *vargp)
 					continue;
 				int rem = rand()%temp;
 				Slice check_key,check_value;
+				check_key.data = (char *)malloc(sizeof(char)*64);
+				check_value.data = (char *)malloc(sizeof(char)*257);
 				bool check = kv.get(rem,&check_key,&check_value);
 			}
 			else if(x==4)
@@ -140,7 +145,7 @@ int main()
 	// --------------------------------------------------------------------------------------
 	// start correcting from here downwards
 	// ----------------------------------------------------------------------------------------
-	for(int k12=0;k12<100000;k12++)
+	for(int k12=0;k12<10;k12++)
 	{
         std::cout<<"k:"<<k12<<endl;
 		int x = rand()%4;
@@ -220,12 +225,12 @@ int main()
 			int rem = rand()%max_size;
 			map<char *,char *, CharCompare>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
-			string key_s = itr->first;
+			char *key_s = itr->first;
             Slice key,value;
-						key.data = (char *)malloc(64);
-						value.data = (char *)malloc(256);
-            strcpy(key.data,key_s.c_str());
-            key.size = key_s.length();
+			key.data = (char *)malloc(64);
+			value.data = (char *)malloc(256);
+            strcpy(key.data,key_s);
+            key.size = strlen(key_s);
 			bool check = kv.del(rem);
 			db.erase(itr);
 			db_size--;
@@ -241,13 +246,13 @@ int main()
 	}
 	int threads = 4;
 
-	/* pthread_t tid[threads]; */
-	/* for (int i = 0; i < threads; i++) */
-	/* { */
-	/* 	tid[i] = i; */
-        /* pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); */
-	/* } */
-	/* for(int i=0;i<threads;i++) */
-	/* 	pthread_join(tid[i],NULL); */
+	 pthread_t tid[threads]; 
+	 for (int i = 0; i < threads; i++) 
+	 { 
+	 	tid[i] = i; 
+  		pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); 
+	 } 
+	 for(int i=0;i<threads;i++) 
+	 	pthread_join(tid[i],NULL); 
 	return 0;
 }

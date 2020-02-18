@@ -21,7 +21,7 @@ class node
         node(){
             key = new Slice;
             value = new Slice;
-            key->size = 63;
+            key->size = 65;
             key->data = (char *)malloc(sizeof(char)*(65));
             value->size = 255;
             value->data = (char *)malloc(sizeof(char)*(257));
