@@ -1,39 +1,47 @@
 #include<bits/stdc++.h>
-#include <unistd.h> 
+#include <unistd.h>
 #include <pthread.h>
 #include <time.h>
 #include "kvStore.cpp"
 using namespace std;
 
-string random_key(int stringLength){
-	string key = "";
+struct CharCompare {
+	bool operator()(char const *a,char const *b) const
+	{
+		return std::strcmp(a,b) <0;
+	}
+};
+char *random_key(int stringLength){
+	char *key = (char *)malloc(stringLength+1);
 	string letters = "";
 	for(char i = 'a';i<='z';i++)letters+=i;
 	for(char i = 'A';i<='Z';i++)letters+=i;
 	for(int i=0;i<stringLength;i++)
-		key = key + letters[rand()%52];
+		key[i] = letters[rand()%52];
+	key[stringLength] = '\0';
 
 	return key;
 }
 
-string random_value(int stringLength){
-	string value = "";
+char *random_value(int stringLength){
+	char *value = (char *)malloc(stringLength+1);
 	string letters = "";
 	for(int i = 0;i<=255;i++)letters+=char(i);
 
 	for(int i=0;i<stringLength;i++)
-		value = value + letters[rand()%256];
+		value[i] = letters[rand()%52+int('A')];
+	value[stringLength] = '\0';
 
 	return value;
 }
 long CLOCKS_PER_SECOND = 1000000;
 kvstore kv;
-map<string,string> db;
+map<char *,char *, CharCompare> db;
 int db_size = 0;
 int num = 0;
 
-void *myThreadFun(void *vargp) 
-{ 
+void *myThreadFun(void *vargp)
+{
 	int transactions=0;
 	clock_t start = clock();
 	int time = 10;
@@ -48,7 +56,7 @@ void *myThreadFun(void *vargp)
 			if(x==0)
 			{
 				Slice key,value;
-				strcpy(key.data,random_key(10).c_str());
+				strcpy(key.data,random_key(10));
 				bool ans = kv.get(&key,&value);
 			}
 			else if(x==1)
@@ -56,9 +64,9 @@ void *myThreadFun(void *vargp)
 				int k = rand()%64 + 1;
 				int v = rand()%256 + 1;
 				Slice key,value;
-				strcpy(key.data,random_key(k).c_str());
+				strcpy(key.data,random_key(k));
 				key.size = k;
-				strcpy(value.data,random_value(v).c_str());
+				strcpy(value.data,random_value(v));
 				value.size = v;
 				bool ans = kv.put(&key,&value);
 				db_size++;
@@ -67,7 +75,7 @@ void *myThreadFun(void *vargp)
 			{
 				int temp=db_size;
 				if (temp == 0)
-					continue;		
+					continue;
 				int rem = rand()%temp;
 				Slice check1_key,check1_value;
 				kv.get(rem,&check1_key,&check1_value);
@@ -96,60 +104,73 @@ void *myThreadFun(void *vargp)
 		tt=clock();
 	}
 	cout<<transactions/time<<endl;
-	return NULL;  
-} 
+	return NULL;
+}
 
 int main()
 {
-	for(int i=0;i<10000001;i++)
+	Slice key1,value1;
+	key1.data = (char *)malloc(64);
+	value1.data = (char *)malloc(256);
+	for(int i=0;i<100001;i++)
 	{
 		int k = rand()%64 + 1;
 		int v = rand()%256 + 1;
-		string key_s = random_key(k);
-		string value_s = random_value(v);
-		Slice key,value;
-		strcpy(key.data,key_s.c_str());
-		key.size = k;
-		strcpy(value.data,value_s.c_str());
-		value.size = v;
-		db.insert(pair<string,string>(key_s,value_s));
-		kv.put(&key,&value);
+		char *key_s = random_key(k);
+		char *value_s = random_value(v);
+		strcpy(key1.data,key_s);
+		key1.size = k;
+		strcpy(value1.data,value_s);
+		value1.size = v;
+		db.insert(pair<char *,char *>(key_s,value_s));
+		kv.put(&key1,&value1);
 		db_size++;
-        /* std::cout<<"i:"<<i<<endl; */
+         std::cout<<"i:"<<i<<endl;
 	}
+
+	// map<char *,char *, CharCompare>:: iterator itr = db.begin();
+	// for(int i=0;i<db_size;i++)
+	// {
+	// 	std::cout<<itr->first<<endl;
+	// 	itr++;
+	// }
 
 	bool incorrect = false;
 
-	// -------------------------------------------------------------------------------------- 
+	// --------------------------------------------------------------------------------------
 	// start correcting from here downwards
 	// ----------------------------------------------------------------------------------------
-	for(int k12=0;k12<1;k12++)
+	for(int k12=0;k12<100000;k12++)
 	{
         std::cout<<"k:"<<k12<<endl;
-		int x = rand()%5;
+		int x = rand()%4;
 		if(x==0)
 		{
-			string k = random_key(10);
-            Slice key,value;
-            strcpy(key.data,k.c_str());
-            key.size = 10;
+			char *k = random_key(10);
+      Slice key,value;
+			key.data = (char *)malloc(64);
+			value.data = (char *)malloc(256);
+      strcpy(key.data,k);
+      key.size = 10;
 			bool ans = kv.get(&key,&value);
-			map<string,string>:: iterator itr = db.find(k);
+			map<char *,char *, CharCompare>:: iterator itr = db.find(k);
 			if((ans==false && itr != db.end()) || (ans==true && itr == db.end()) )
 				incorrect = true;
 		}
-		else if(x==1)
+		else if(x==2)
 		{
 			int k = rand()%64 + 1;
 			int v = rand()%256 + 1;
-			string key_s = random_key(k);
-			string value_s = random_value(v);
-            Slice key,value;
-            strcpy(key.data,key_s.c_str());
-            key.size = k;
-            strcpy(value.data,value_s.c_str());
-            value.size = v;
-            db.insert(pair<string,string>(key_s,value_s));
+			char *key_s = random_key(k);
+			char *value_s = random_value(v);
+	    Slice key,value;
+			key.data = (char *)malloc(64);
+			value.data = (char *)malloc(256);
+	    strcpy(key.data,key_s);
+	    key.size = k;
+	    strcpy(value.data,value_s);
+	    value.size = v;
+	    db.insert(pair<char *,char *> (key_s,value_s));
 			bool check1 = kv.get(&key,&value);
 			bool ans = kv.put(&key,&value);
 			bool check2 = kv.get(&key,&value);
@@ -161,11 +182,13 @@ int main()
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
-			map<string,string>:: iterator itr = db.begin();
-            Slice key,value;
+			map<char *,char *, CharCompare>:: iterator itr = db.begin();
+      Slice key,value;
+			key.data = (char *)malloc(64);
+			value.data = (char *)malloc(256);
 			for(int i=0;i<rem;i++)itr++;
-            strcpy(key.data,itr->first.c_str());
-            key.size = itr->first.length();
+            strcpy(key.data,itr->first);
+            key.size = strlen(itr->first);
 			bool check = kv.del(&key);
 			db_size--;
 			db.erase(itr);
@@ -177,22 +200,30 @@ int main()
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
-            Slice key,value;
-            kv.get(rem,&key,&value);
-			pair <string,string> check = make_pair(key.data,value.data);
-			map<string,string>:: iterator itr = db.begin();
+      Slice key,value;
+			key.data = (char *)malloc(64);
+			value.data = (char *)malloc(256);
+      kv.get(rem,&key,&value);
+			pair <char *,char *> check = make_pair(key.data,value.data);
+			map<char *,char *, CharCompare>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
-			if(strcmp(key.data,itr->first.c_str())!=0|| strcmp(value.data,itr->second.c_str())!=0)
+			if(strcmp(key.data,itr->first)!=0|| strcmp(value.data,itr->second)!=0)
+			{
 				incorrect = true;
+				std::cout<<key.data<<endl<<itr->first<<endl;
+				std::cout<<value.data<<endl<<itr->second<<endl;
+			}
 		}
 		else if(x==4)
 		{
 			int max_size = db.size();
 			int rem = rand()%max_size;
-			map<string,string>:: iterator itr = db.begin();
+			map<char *,char *, CharCompare>:: iterator itr = db.begin();
 			for(int i=0;i<rem;i++)itr++;
 			string key_s = itr->first;
             Slice key,value;
+						key.data = (char *)malloc(64);
+						value.data = (char *)malloc(256);
             strcpy(key.data,key_s.c_str());
             key.size = key_s.length();
 			bool check = kv.del(rem);
@@ -211,10 +242,10 @@ int main()
 	int threads = 4;
 
 	/* pthread_t tid[threads]; */
-	/* for (int i = 0; i < threads; i++) */ 
+	/* for (int i = 0; i < threads; i++) */
 	/* { */
 	/* 	tid[i] = i; */
-        /* pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); */ 
+        /* pthread_create(&tid[i], NULL, myThreadFun, (void *)&tid[i]); */
 	/* } */
 	/* for(int i=0;i<threads;i++) */
 	/* 	pthread_join(tid[i],NULL); */

@@ -21,10 +21,20 @@ class node
         node(){
             key = new Slice;
             value = new Slice;
-            key->size = 64;
+            key->size = 63;
             key->data = (char *)malloc(sizeof(char)*(65));
             value->size = 255;
             value->data = (char *)malloc(sizeof(char)*(257));
+            lsize = 0;
+            rsize = 0;
+        }
+        node(int nm,int mn){
+            key = new Slice;
+            value = new Slice;
+            key->size = nm;
+            key->data = (char *)malloc(sizeof(char)*(nm));
+            value->size = mn;
+            value->data = (char *)malloc(sizeof(char)*(mn));
             lsize = 0;
             rsize = 0;
         }
@@ -302,7 +312,7 @@ class kvstore{
     bool put(Slice *key, Slice *value)
     {
         //Your Code Here
-        node *p, *q, *par;
+        node *p=NULL, *q=NULL, *par=NULL;
         node *t = new node;
 
         strcpy(t->key->data,key->data);
@@ -311,6 +321,7 @@ class kvstore{
         t->value->size = value->size;
         t->left = NULL;
         t->right = NULL;
+        t->parent = NULL;
         t->color = 'r';
         if(!root)
         {
@@ -444,8 +455,10 @@ class kvstore{
         while(p!=NULL&&found==0)
         {
             if(strcmp(p->key->data,key->data)==0)
-                found=1;
-                strcpy(value->data,p->value->data);
+            {
+              found=1;
+              strcpy(value->data,p->value->data);
+            }
             if(found==0)
             {
                 if(strcmp(p->key->data,key->data)<0)
